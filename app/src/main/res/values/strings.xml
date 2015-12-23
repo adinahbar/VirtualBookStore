@@ -1,0 +1,154 @@
+<resources>
+    <string name="app_name">VirtualBookStore</string>
+    <string name="action_settings">Settings</string>
+        <string name="log_in">log in</string>
+        <string name="category_book_list_name">This is book category</string>
+        <string name="id_text_view">ID :</string>
+        <string name="privilege_text_view">Privilege :</string>
+        <string-array name="privilege_array">
+            <item>customer</item>
+            <item>manager</item>
+            <item>supplier</item>
+        </string-array>
+        <string name="sing_in">sign in</string>
+        <string name="name_text_view">Name:</string>
+        <string name="address_text_view">Address:</string>
+        <string name="gender_text_view">Gender:</string>
+        <string name="phon_number_text_view">Phone number:</string>
+        <string name="email_text_view">Email address:</string>
+        <string name="birthday_text_view">BirthDay date:</string>
+        <string name="status_text_view">Status:</string>
+        <string name="add_button">Add</string>
+        <string name="female">Female</string>
+        <string name="male">male</string>
+        <string name="enter_id">enter your id</string>
+        <string name="enter_name">enter your name</string>
+        <string name="enter_phone_number">enter your phone number</string>
+        <string name="enter_address">enter your address</string>
+        <string name="navigation_drawer_open">Drawer Open</string>
+        <string name="navigation_drawer_close">Drawer Closed</string>
+        <string name="enter_email">enter your email address</string>
+        <string name="enter_birthday">enter your birthday (MM/DD/YYYY)</string>
+        <string name="shop_by_category_text_customer">Shop by category:</string>
+        <string-array name="status_array">
+            <item>single</item>
+            <item>married</item>
+            <item>divorced</item>
+            <item>widower</item>
+        </string-array>
+        <string-array name="supplier_type_array">
+            <item>publishing</item>
+            <item>shop</item>
+            <item>writer</item>
+        </string-array>
+        <string-array name="category_array">
+            <item>arts</item>
+            <item>biographies</item>
+            <item>children</item>
+            <item>cook</item>
+            <item>fantasy</item>
+            <item>history</item>
+            <item>literature</item>
+            <item>memoirs</item>
+            <item>mystery</item>
+            <item>photography</item>
+            <item>romance</item>
+            <item>scienceFiction</item>
+            <item>suspense</item>
+            <item>youngAdult</item>
+        </string-array>
+        <string-array name="language_array">
+            <item>english</item>
+            <item>german</item>
+            <item>french</item>
+            <item>spanish</item>
+            <item>italian</item>
+            <item>russian</item>
+            <item>chinese</item>
+            <item>hebrew</item>
+            <item>zulu</item>
+        </string-array>
+        <string name="customer_service_num_add_supplier">Customer service phone</string>
+        <string name="enter_customer_service_num">enter customer service phone num</string>
+        <string name="reservation_num_text_view_add_supplier">Reservation phone num:</string>
+        <string name="enter_reservation_num">enter reservation phone num</string>
+        <string name="type_text_view_add_supplier">Type:</string>
+        <string name="title">title</string>
+        <string name="author">author</string>
+        <string name="rate">rate</string>
+        <string name="Update_button">Update</string>
+        <string name="num_credit_card"># Credit Card:</string>
+        <string name="enter_num_credit_card">enter # credit card</string>
+        <string name="vip_text_view">VIP:</string>
+        <string name="yes">yes</string>
+        <string name="shop_it_text">Shop it</string>
+        <string name="shop_by_author_text_view_customer">Shop by books authors:</string>
+        <string name="shop_by_supplier_text_view_customer">Shop by books supplier:</string>
+        <string name="enter_book_name">enter book\'s name</string>
+        <string name="author_book_text">Author: </string>
+        <string name="enter_author_book">enter book\'s author</string>
+        <string name="publisher_book_text">Publisher: </string>
+        <string name="enter_book_publisher">enter book\'s publisher</string>
+        <string name="summary_book_text">Summary: </string>
+        <string name="enter_book_summary_text">enter book\'s summary</string>
+        <string name="published_date_text">Published Date: </string>
+        <string name="enter_published_date">enter date (MM/DD/YYYY)</string>
+        <string name="language_book_text">Language: </string>
+        <string name="category_book_text">Category: </string>
+        <string name="title_activity_update_book">UpdateBook</string>
+        <string name="num_of_copies_text">Number of copies: </string>
+        <string name="enter_num_of_copies">enter number of copies</string>
+        <string name="book_price_text_view">Price: </string>
+        <string name="enter_book_price">enter book\'s price</string>
+        <string name="enter_supplier_id">enter book\'s supplier ID</string>
+        <string name="years_in_company_text">Years in company: </string>
+        <string name="enter_years_in_company">enter num of years</string>
+        <string name="welcome_to_press_book">welcome to press book!!</string>
+        <string name="title_activity_update_manager">UpdateManager</string>
+        <string name="title_activity_book_page">BookPage</string>
+        <string name="suppliers">Suppliers:</string>
+        <string name="order">Order</string>
+        <string name="add_opinion_text">Add opinion</string>
+        <string name="rate_text">Rate:</string>
+        <string name="opinions_text">Opinions:</string>
+        <string name="title_activity_log_in">LogIn</string>
+        <string name="title_activity_add_customer_sing_in">AddCustomerSingIn</string>
+        <string name="title_activity_customer">CustomerActivity</string>
+        <string name="title_activity_manager">ManagerActivity</string>
+        <string name="title_activity_supplier">SupplierActivity</string>
+        <string name="title_activity_add_supplier">AddSupplier</string>
+        <string name="title_activity_add_manager">AddManager</string>
+        <string name="title_activity_add_book">AddBook</string>
+        <string name="title_activity_add_order">AddOrder</string>
+        <string name="title_activity_update_customer">UpdateCustomer</string>
+        <string name="title_activity_update_supplier">UpdateSupplier</string>
+        <string name="title_activity_activity_remove_supplier">activity_remove_supplier</string>
+        <string name="select_supplier_to_remove">please select the supplier you wnt to remove</string>
+        <string name="title_activity_remove_customer">RemoveCustomer</string>
+        <string name="remove_supplier_introducing_textView">select the id of the supplier you want to remove</string>
+        <string name="remove_customer_introducing_textView">select the id of the customer you want to remove</string>
+        <string name="remove_book_introducing_textView">select the id of the book you want to remove</string>
+        <string name="title_activity_remove_book">removeBook</string>
+        <string-array name="nav_drawer_items_manager">
+            <item>Add supplier</item>
+            <item>Remove supplier</item>
+            <item>Update supplier</item>
+            <item>Add customer</item>
+            <item>Remove customer</item>
+            <item>Update customer</item>
+            <item>Remove opinion</item>
+            <item>Add manager</item>
+            <item>Remove manager</item>
+            <item>Update manager</item>
+        </string-array>
+        <!-- Content Description -->
+        <string name="desc_list_item_icon">Item Icon</string>
+
+        <!-- TODO: Remove or change this placeholder text -->
+        <string name="hello_blank_fragment">Hello blank fragment</string>
+        <string name="sing">AdinaAndSari</string>
+        <array name="nav_drawer_icons">
+            <item>@mipmap/ic_people</item>
+        </array>
+    <string name="title_activity_shop_by_category">ShopByCategoryActivity</string>
+</resources>
