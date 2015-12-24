@@ -17,6 +17,11 @@ public class BookItemForList {
     public BookItemForList() {
     }
 
+    @Override
+    public String toString() {
+        return id + '\t' +name+'\t'+ author ;
+    }
+
     public String getName() {
         return name;
     }

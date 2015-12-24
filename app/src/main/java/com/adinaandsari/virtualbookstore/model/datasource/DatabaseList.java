@@ -1,4 +1,6 @@
 package com.adinaandsari.virtualbookstore.model.datasource;
+import android.graphics.drawable.AnimatedVectorDrawable;
+
 import com.adinaandsari.virtualbookstore.entities.*;
 import com.adinaandsari.virtualbookstore.model.backend.Backend;
 
@@ -292,7 +294,7 @@ public class DatabaseList implements Backend {
         orders.remove(orderToDelete);
     }
     /**
-     * fucntion to update an order
+     * function to update an order
      * @param order to update
      * @param privilege of the user
      * @throws Exception
@@ -693,21 +695,21 @@ public class DatabaseList implements Backend {
     }
 
     /**
-     * function to get all the suppliers of a specific book
+     * function to get all the supplierandbooks of a specific book
      * @param bookID
      * @return supplier list
      * @throws Exception
      */
-    public ArrayList<Supplier> supplierListByBook (long bookID)throws Exception{
+    public ArrayList<SupplierAndBook> supplierListByBook (long bookID)throws Exception{
         if (supplierAndBooks.size() == 0 ) //if the list is empty
             throw new Exception("ERROR: the list is empty");
         //to prevent aliasing - create a new list and add new books that are equal to the books in the list book
-        ArrayList<Supplier> suppliersOfTheBook = new ArrayList<>();
+        ArrayList<SupplierAndBook> suppliersOfTheBook = new ArrayList<>();
         for (SupplierAndBook supplierAndBook : supplierAndBooks)
         {
             if (supplierAndBook.getBookID() == bookID)
             {
-                suppliersOfTheBook.add(new Supplier(findSupplierByID(supplierAndBook.getSupplierID())));
+                suppliersOfTheBook.add(supplierAndBook);
             }
         }
         return suppliersOfTheBook;
@@ -757,21 +759,51 @@ public class DatabaseList implements Backend {
     }
     /**
      *  func to calc total price from an order and to set payment
-     * @param CustomerOrders
+     * @param customerId
      * @throws Exception
      * @return
      */
     @Override
-    public double finishOrder (ArrayList<Order> CustomerOrders)throws Exception
+    public  ArrayList<Order> finishOrder (int customerId)throws Exception
     {
-        double SumToPay=0;
-        for (Order o:CustomerOrders)//loop to go on orders
+        ArrayList<Order> customerOrders=new ArrayList<Order>();
+        for (Order o:customerOrders)//loop to go on orders
         {
-            SumToPay+=o.getTotalPrice();
-            o.setPaid(true);
-            updateOrder(o,Privilege.MANAGER);
-
+            if (o.isPaid() != true && o.getCustomerNumID() == customerId) {
+                customerOrders.add(o);
+            }
         }
+        if (customerOrders.size() == 0 ) //if the list is empty
+            throw new Exception("ERROR: you have nothing in your cart");
+        return customerOrders;
+
+    }
+
+    /**
+     * func to get the total price of a customer cart after checking if he's VIP
+     * @param certainCustomerOrders
+     * @return
+     * @throws Exception
+     */
+    public  double getCartPayment (ArrayList<Order> certainCustomerOrders )throws Exception {
+        double SumToPay = 0;
+        for (Order o : certainCustomerOrders)//loop to go on orders
+        {
+            SumToPay += o.getTotalPrice();
+            o.setPaid(true);
+            updateOrder(o, Privilege.MANAGER);
+        }
+        Order helper=certainCustomerOrders.get(0);
+        int size=certainCustomerOrders.size();
+        if (SumToPay/size>100&&size>10) {//a customer becomes VIP if he has 10 orders in an average of 100 NIS
+            Customer c = findCustomerByID(helper.getCustomerNumID());
+            //updating the right places
+            c.setVIP(true);
+            helper.setTotalPrice(helper.getTotalPrice()*0.9);
+            updateOrder(helper,Privilege.MANAGER);
+            updateCustomer(c,Privilege.MANAGER);
+        }
+
         return SumToPay;
     }
     /**
@@ -863,24 +895,6 @@ public class DatabaseList implements Backend {
     @Override
     public void customerVIP (Order order)throws Exception
     {
-        int counter=0;
-        double totalPrice=0;
-        for (Order o : orders)//loop to go on orders
-        {
-            if (o.getCustomerNumID()==order.getCustomerNumID()) //if this order belong to this customer
-            {
-                counter++;
-                totalPrice+=o.getTotalPrice();
-            }
-        }
-        if (totalPrice/counter>100&&counter>10) {//a customer becomes VIP if he has 10 orders in an average of 100 NIS
-            Customer c = findCustomerByID(order.getCustomerNumID());
-            //updating the right places
-            c.setVIP(true);
-            order.setTotalPrice(order.getTotalPrice()*0.9);
-            updateOrder(order,Privilege.MANAGER);
-            updateCustomer(c,Privilege.MANAGER);
-        }
 
 
     }

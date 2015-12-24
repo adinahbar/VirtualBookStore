@@ -68,10 +68,11 @@ public interface Backend {
     public ArrayList<Book> bookListSortedByAuthors(String authorsName)throws Exception;
     public ArrayList<Book> bookListSortedByDate(Date start, Date end)throws Exception;
     public ArrayList<Book> bookListBySupplier(long supplierID)throws Exception;
-    public ArrayList<Supplier> supplierListByBook(long bookID)throws Exception;
+    public ArrayList<SupplierAndBook> supplierListByBook(long bookID)throws Exception;
     public ArrayList<String> authorList() throws Exception;
     public int getNumOfCopiesOfBook(long bookID)throws Exception;
-    public double finishOrder(ArrayList<Order> orders)throws Exception;
+    public  ArrayList<Order> finishOrder(int customerId)throws Exception;
+    public  double getCartPayment (ArrayList<Order> certainCustomerOrders )throws Exception;
     public void addMoreCopiesToBook(long bookID, int numOfCopies, long supplierID, Privilege privilege)throws Exception;
     public void customerVIP(Order order)throws Exception;
     public void updateBookRate(Book book)throws Exception;

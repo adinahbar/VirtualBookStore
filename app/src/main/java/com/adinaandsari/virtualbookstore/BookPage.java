@@ -8,26 +8,38 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.adinaandsari.virtualbookstore.entities.Book;
 import com.adinaandsari.virtualbookstore.entities.Customer;
+import com.adinaandsari.virtualbookstore.entities.Order;
+import com.adinaandsari.virtualbookstore.entities.Privilege;
 import com.adinaandsari.virtualbookstore.entities.Supplier;
+import com.adinaandsari.virtualbookstore.entities.SupplierAndBook;
 import com.adinaandsari.virtualbookstore.model.datasource.BackendFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BookPage extends AppCompatActivity {
 
     TextView textViewOfName,textViewOfAuthor,textViewOfPublisher,textViewOfSummary,
-            textViewOfDatePublished,textViewOfID,
+            textViewOfDatePublished,textViewOfID,textViewOfNumOfPages,
             textViewOfCategory, textViewOFLanguage, textViewOFRate;
+    EditText editTextNumOfPages;
     private Spinner suppliersSpinner , opinionsSpinner;
-    private Button orderButton , addOpinionButton ;
-
+    private ImageButton addToCartButton ;
+    private List<BookItemForList> supplierItemForSpinner;
+    private BookItemForList selectedFromSpinner;
+    private Supplier selectedSupplier;
+    private int numOfPages;
     //this user
     Intent preIntent = getIntent();
     Book book = (Book) preIntent.getSerializableExtra(ConstValue.BOOK_KEY);
@@ -44,16 +56,20 @@ public class BookPage extends AppCompatActivity {
         textViewOfID = (TextView)findViewById(R.id.the_id_book_text_view_book_page);
         textViewOfCategory = (TextView)findViewById(R.id.the_category_text_view_book_page);
         textViewOFLanguage = (TextView)findViewById(R.id.the_language_text_view_book_page);
+        textViewOfNumOfPages=(TextView)findViewById(R.id.num_of_copies_text_view_book_page);
         textViewOFRate = (TextView)findViewById(R.id.the_rate_text_view_book_page);
         suppliersSpinner = (Spinner)findViewById(R.id.suppliers_spinner_book_page);
-        opinionsSpinner = (Spinner)findViewById(R.id.opinions_spinner_book_page);
-        orderButton = (Button)findViewById(R.id.order_book_button_book_page);
-        addOpinionButton = (Button)findViewById(R.id.add_opinion_button_book_page);
+        addToCartButton = (ImageButton)findViewById(R.id.add_to_cart_button);
+        editTextNumOfPages=(EditText)findViewById(R.id.num_of_copies_edit_text_book_page);
+
     }
+
+
 
     //function to show to book's detail
     void showDetail()throws Exception
     {
+        numOfPages=Integer.parseInt(editTextNumOfPages.getText().toString());
         textViewOfName.setText(book.getBookName());
         textViewOfAuthor.setText(book.getAuthor());
         textViewOfPublisher.setText(book.getPublisher());
@@ -63,18 +79,25 @@ public class BookPage extends AppCompatActivity {
         textViewOfID.setText(book.getBookID());
         textViewOfCategory.setText(book.getBooksCategory().toString());
         textViewOFLanguage.setText(book.getLanguage().toString());
-        ArrayList<Supplier> suppliers = BackendFactory.getInstance().supplierListByBook(book.getBookID());
-        /*
-        String[] names = new String[suppliers.size()];
-        int i=0;
-        for (Supplier s:suppliers)
+        ArrayList<SupplierAndBook> supplierAndBooks = BackendFactory.getInstance().supplierListByBook(book.getBookID());
+        for(SupplierAndBook s : supplierAndBooks)
         {
-            names[i] = s.getName();
-            i++;
+            Supplier supplier=BackendFactory.getInstance().findSupplierByID(s.getSupplierID());
+            supplierItemForSpinner.add(new BookItemForList(supplier.getName(),s.getSupplierID(),String.valueOf(s.getPrice())));
         }
-        suppliersSpinner;
-        opinionsSpinner;
-        */
+        ArrayAdapter<BookItemForList> adapter = new ArrayAdapter<BookItemForList>(this, android.R.layout.simple_spinner_item,supplierItemForSpinner);
+        suppliersSpinner.setAdapter(adapter);
+        suppliersSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id){
+            selectedFromSpinner = (BookItemForList)suppliersSpinner.getSelectedItem();
+        }
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+        }
+        }
+        );
+
     }
 
     @Override
@@ -87,25 +110,39 @@ public class BookPage extends AppCompatActivity {
         findView();
         try {
             showDetail();
+            for (Supplier s : BackendFactory.getInstance().getSupplierList()) {
+                if (s.getNumID()==selectedFromSpinner.getId())
+                {
+                    selectedSupplier=s;
+                }
+            }
         }catch (Exception e)
         {
             //print the exception in a toast view
             Toast.makeText(BookPage.this, "Failed to show the book's detail:\n" + e.getMessage().toString(), Toast.LENGTH_LONG).show();
         }
 
-        orderButton.setOnClickListener(new View.OnClickListener() {
+        addToCartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    Order currentOrder = new Order(book.getBookID(), selectedSupplier.getNumID(), customer.getNumID(), numOfPages);
+                    BackendFactory.getInstance().addOrder(currentOrder, Privilege.MANAGER);
+                    Intent intent = new Intent(BookPage.this, CustomerActivity.class);//going to previous activity with this supplier details
+                    intent.putExtra(ConstValue.CUSTOMER_KEY, customer);
+                    startActivity(intent);
+                }
+                catch (Exception e)
+                {
+                    //print the exception in a toast view
+                    Toast.makeText(BookPage.this, "Failed to show the book's detail:\n" + e.getMessage().toString(), Toast.LENGTH_LONG).show();
+                }
 
             }
-        });
-        addOpinionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
             }
-        });
+
+            );
+
+        }
+
     }
-
-}

@@ -9,6 +9,7 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -103,7 +104,15 @@ public class BookListFragment extends DialogFragment {
         };
         listView.setAdapter(adapter);
         getActivity().setContentView(listView);
-
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> listView, View item, int position, long id) {
+                Intent intent = new Intent(getActivity(), BookPage.class);
+                Book b=(Book)listView.getSelectedItem();
+                intent.putExtra(ConstValue.SUPPLIER_KEY, b);
+                startActivity(intent);
+            }
+        });
+        adapter.notifyDataSetChanged();
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_list_book, container, false);
     }
