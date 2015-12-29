@@ -18,8 +18,7 @@ import com.adinaandsari.virtualbookstore.model.datasource.BackendFactory;
 public class UpdateManager extends AppCompatActivity {
 
     //this user
-    Intent preIntent = getIntent();
-    Manager user = (Manager) preIntent.getSerializableExtra(ConstValue.MANAGER_KEY);
+    Manager user;
 
     private long id;
     private String name ,address , phoneNumber , email;
@@ -48,6 +47,9 @@ public class UpdateManager extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_manager);
+        //this user
+        Intent preIntent = getIntent();
+        user = (Manager) preIntent.getSerializableExtra(ConstValue.MANAGER_KEY);
         //function to find views by id
         findView();
         //enter the data of the manager

@@ -28,8 +28,7 @@ import java.util.Locale;
 public class UpdateSupplier extends AppCompatActivity {
 
     //this user
-    Intent preIntent = getIntent();
-    Manager user = (Manager) preIntent.getSerializableExtra(ConstValue.MANAGER_KEY);
+    Manager user ;
 
     private long id;
     private String name ,address , phoneNumber , email , customerServiceNum,reservationNum;
@@ -60,6 +59,9 @@ public class UpdateSupplier extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_supplier);
+        //this user
+        Intent preIntent = getIntent();
+        user = (Manager) preIntent.getSerializableExtra(ConstValue.MANAGER_KEY);
         //find view
         findView();
         //spinner for the type of the supplier

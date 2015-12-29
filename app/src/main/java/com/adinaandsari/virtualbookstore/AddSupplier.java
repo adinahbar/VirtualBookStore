@@ -33,8 +33,7 @@ public class AddSupplier extends AppCompatActivity {
     Button addButton;
 
     //this user
-    Intent preIntent = getIntent();
-    Manager user = (Manager) preIntent.getSerializableExtra(ConstValue.MANAGER_KEY);
+    Manager user;
 
     //function to find view by id for the view in the activity
     void findView()
@@ -58,7 +57,12 @@ public class AddSupplier extends AppCompatActivity {
         setContentView(R.layout.activity_add_supplier);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-//find view
+
+        //this user
+        Intent preIntent = getIntent();
+        user = (Manager) preIntent.getSerializableExtra(ConstValue.MANAGER_KEY);
+
+        //find view
         findView();
         //spinner for the type of the supplier
         String[] typeList = getResources().getStringArray(R.array.supplier_type_array);
@@ -99,7 +103,7 @@ public class AddSupplier extends AppCompatActivity {
                     Backend backendFactory = com.adinaandsari.virtualbookstore.model.datasource.BackendFactory.getInstance();
                     Supplier supplierToAdd = new Supplier(id, name, address, phoneNumber, email, gender,
                             customerServiceNum, reservationNum, supplierType);
-                    backendFactory.updateSupplier(supplierToAdd, user.getPrivilege());
+                    backendFactory.addSupplier(supplierToAdd, user.getPrivilege());
                     Toast.makeText(AddSupplier.this, "The addition has been successful!", Toast.LENGTH_LONG).show();
 
                     //go back to the activity

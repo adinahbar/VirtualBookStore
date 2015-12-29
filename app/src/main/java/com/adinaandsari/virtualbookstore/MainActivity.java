@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
             backendFactory.addCustomer(customerToAdd, Privilege.MANAGER);
             Supplier supplierToAdd = new Supplier(456789123,"aa", "aa", "00", "@", Gender.MALE,
                     "555", "55", SupplierType.WRITER);
-            backendFactory.updateSupplier(supplierToAdd, Privilege.MANAGER);
+            backendFactory.addSupplier(supplierToAdd, Privilege.MANAGER);
             Book bookToAdd = new Book("ab","aa", Category.ARTS,new Date(1995,7,8), Language.FRENCH,"aa","very nice");
             backendFactory.addBook(bookToAdd, 456789123,456789123 , Privilege.SUPPLIER,
                     5, 99);

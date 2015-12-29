@@ -20,8 +20,7 @@ public class ManagerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
     //this manager
-    Intent preIntent = getIntent();
-    Manager user = (Manager) preIntent.getSerializableExtra(ConstValue.MANAGER_KEY);
+    Manager user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +37,10 @@ public class ManagerActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
+
+        //this manager
+        Intent preIntent = getIntent();
+        user = (Manager) preIntent.getSerializableExtra(ConstValue.MANAGER_KEY);
 
         //navigation drawer
         DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_manager);
@@ -113,8 +116,7 @@ public class ManagerActivity extends AppCompatActivity
                 intent = new Intent(ManagerActivity.this, AddManager.class);
                 break;
             case R.id.removeManager:
-                //////////////////////////////////////////////
-                intent = new Intent(ManagerActivity.this, UpdateManager.class);
+                intent = new Intent(ManagerActivity.this, RemoveManager.class);
                 break;
             case R.id.updateManager:
                 intent = new Intent(ManagerActivity.this, UpdateManager.class);

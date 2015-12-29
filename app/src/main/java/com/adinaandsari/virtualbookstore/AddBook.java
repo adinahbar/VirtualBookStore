@@ -25,8 +25,7 @@ import java.util.Locale;
 public class AddBook extends AppCompatActivity {
 
     //this user
-    Intent preIntent = getIntent();
-    Supplier user = (Supplier) preIntent.getSerializableExtra(ConstValue.SUPPLIER_KEY);
+    Supplier user;
 
     private Spinner categorySpinner , languageSpinner;
     EditText editTextOfName,editTextOfAuthor,editTextOfPublisher,editTextOfSummary,
@@ -43,6 +42,11 @@ public class AddBook extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_book);
+
+        //this user
+        Intent preIntent = getIntent();
+        user = (Supplier) preIntent.getSerializableExtra(ConstValue.SUPPLIER_KEY);
+
         //find all the viewers
         findView();
 

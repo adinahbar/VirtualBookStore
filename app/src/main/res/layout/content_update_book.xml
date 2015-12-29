@@ -10,7 +10,7 @@
     tools:showIn="@layout/activity_update_book"
     tools:context="com.adinaandsari.virtualbookstore.UpdateBook"
     android:orientation="vertical"
-    android:weightSum="10">
+    android:weightSum="12">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -189,6 +189,42 @@
             android:layout_weight="1"
             android:inputType="numberDecimal"
             android:hint="@string/enter_book_price" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/num_of_copies"
+            android:id="@+id/num_of_copies_text_view_update_book" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/num_of_copies_for_a_book_update_book" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/more_copies"
+            android:id="@+id/more_copies_text_view_update_book" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/more_copies_edit_text_update_book"
+            android:layout_weight="1"
+            android:hint="@string/enter_number" />
     </LinearLayout>
     <LinearLayout
         android:orientation="vertical"

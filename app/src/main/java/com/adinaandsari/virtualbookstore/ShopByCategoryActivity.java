@@ -24,13 +24,16 @@ import java.util.ArrayList;
 public class ShopByCategoryActivity extends AppCompatActivity {
 
     private Spinner categorySpinner;
-    Intent preIntent = getIntent();
-    Customer customer = (Customer) preIntent.getSerializableExtra(ConstValue.CUSTOMER_KEY);
+    Customer customer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop_by_category);
+
+        //the user
+        Intent preIntent = getIntent();
+        customer = (Customer) preIntent.getSerializableExtra(ConstValue.CUSTOMER_KEY);
 
         //the category spinner
         categorySpinner = (Spinner) findViewById(R.id.category_spinner_shop_by_category);

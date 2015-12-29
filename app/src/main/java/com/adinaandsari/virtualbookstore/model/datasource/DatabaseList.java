@@ -764,7 +764,7 @@ public class DatabaseList implements Backend {
      * @return
      */
     @Override
-    public  ArrayList<Order> finishOrder (int customerId)throws Exception
+    public  ArrayList<Order> finishOrder (long customerId)throws Exception
     {
         ArrayList<Order> customerOrders=new ArrayList<Order>();
         for (Order o:customerOrders)//loop to go on orders

@@ -71,7 +71,7 @@ public interface Backend {
     public ArrayList<SupplierAndBook> supplierListByBook(long bookID)throws Exception;
     public ArrayList<String> authorList() throws Exception;
     public int getNumOfCopiesOfBook(long bookID)throws Exception;
-    public  ArrayList<Order> finishOrder(int customerId)throws Exception;
+    public  ArrayList<Order> finishOrder(long customerId)throws Exception;
     public  double getCartPayment (ArrayList<Order> certainCustomerOrders )throws Exception;
     public void addMoreCopiesToBook(long bookID, int numOfCopies, long supplierID, Privilege privilege)throws Exception;
     public void customerVIP(Order order)throws Exception;

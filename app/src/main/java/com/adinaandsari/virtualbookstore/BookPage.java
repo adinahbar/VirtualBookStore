@@ -40,10 +40,9 @@ public class BookPage extends AppCompatActivity {
     private BookItemForList selectedFromSpinner;
     private Supplier selectedSupplier;
     private int numOfPages;
-    //this user
-    Intent preIntent = getIntent();
-    Book book = (Book) preIntent.getSerializableExtra(ConstValue.BOOK_KEY);
-    Customer customer = (Customer) preIntent.getSerializableExtra(ConstValue.CUSTOMER_KEY);
+    //this users
+    Book book ;
+    Customer customer ;
 
     //function to find view by id for the view in the activity
     void findView()
@@ -63,8 +62,6 @@ public class BookPage extends AppCompatActivity {
         editTextNumOfPages=(EditText)findViewById(R.id.num_of_copies_edit_text_book_page);
 
     }
-
-
 
     //function to show to book's detail
     void showDetail()throws Exception
@@ -106,6 +103,12 @@ public class BookPage extends AppCompatActivity {
         setContentView(R.layout.activity_book_page);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //this user
+        Intent preIntent = getIntent();
+        book = (Book) preIntent.getSerializableExtra(ConstValue.BOOK_KEY);
+        customer = (Customer) preIntent.getSerializableExtra(ConstValue.CUSTOMER_KEY);
+
         //find all the viewers and show the detail
         findView();
         try {

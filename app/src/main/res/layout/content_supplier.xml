@@ -7,11 +7,16 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_supplier"
+    tools:showIn="@layout/app_bar_main"
     tools:context="com.adinaandsari.virtualbookstore.SupplierActivity"
     android:orientation="vertical"
     android:background="#ffffff"
     android:weightSum="4">
+    <!-- Framelayout to display Fragments -->
+    <FrameLayout
+        android:id="@+id/frame_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"

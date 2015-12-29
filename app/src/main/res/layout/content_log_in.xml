@@ -30,8 +30,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/id_text_view"
-                android:id="@+id/id_text_view_log_in"
-                android:layout_gravity="bottom" />
+                android:layout_gravity="bottom"
+                android:id="@+id/id_text_view_log_in" />
 
             <EditText
                 android:layout_width="wrap_content"

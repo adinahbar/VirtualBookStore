@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.adinaandsari.virtualbookstore" >
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -106,6 +108,26 @@
         <activity
             android:name=".ShopByCategoryActivity"
             android:label="@string/title_activity_shop_by_category"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".ShopByAuthorActivity"
+            android:label="@string/title_activity_shop_by_author"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".shopAllBook"
+            android:label="@string/title_activity_shop_all_book"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".CustomerCart"
+            android:label="@string/title_activity_customer_cart"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".RemoveManager"
+            android:label="@string/title_activity_remove_manager"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
     </application>

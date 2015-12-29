@@ -21,9 +21,7 @@ import java.util.ArrayList;
 
 public class RemoveBook extends AppCompatActivity {
 
-    //this supplier is entering the activity
-    Intent preIntent = getIntent();
-    Supplier user = (Supplier) preIntent.getSerializableExtra(ConstValue.SUPPLIER_KEY);
+    Supplier user;
     private Spinner removeBookIdSpinner;
     private Long idToRemove;
     private Button removeBookButton;
@@ -47,6 +45,9 @@ public class RemoveBook extends AppCompatActivity {
         setContentView(R.layout.activity_remove_book);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //this supplier is entering the activity
+        Intent preIntent = getIntent();
+        user = (Supplier) preIntent.getSerializableExtra(ConstValue.SUPPLIER_KEY);
         removeBookIdSpinner = (Spinner)findViewById(R.id.select_supplier_to_remove__by_ID_spinner);
         removeBookButton = (Button)findViewById(R.id.remove_book_button);
         try {

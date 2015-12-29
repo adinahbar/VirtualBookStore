@@ -13,8 +13,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.adinaandsari.virtualbookstore.entities.Book;
+import com.adinaandsari.virtualbookstore.model.backend.Backend;
+import com.adinaandsari.virtualbookstore.model.datasource.BackendFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +36,7 @@ public class BookListFragment extends DialogFragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
     private ArrayList<Book> bookArrayList;
     private List<BookItemForList> bookItemForLists;
 
@@ -107,9 +111,17 @@ public class BookListFragment extends DialogFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> listView, View item, int position, long id) {
                 Intent intent = new Intent(getActivity(), BookPage.class);
-                Book b=(Book)listView.getSelectedItem();
-                intent.putExtra(ConstValue.SUPPLIER_KEY, b);
-                startActivity(intent);
+                BookItemForList bookItemForList = (BookItemForList)listView.getSelectedItem();
+                try {
+                    Book b = BackendFactory.getInstance().findBookByID(bookItemForList.getId());
+                    intent.putExtra(ConstValue.SUPPLIER_KEY, b);
+                    startActivity(intent);
+                }
+                catch (Exception e)
+                {
+                    //print the exception in a toast view
+                    Toast.makeText(getActivity(), "Error:\n" + e.getMessage().toString(), Toast.LENGTH_LONG).show();
+                }
             }
         });
         adapter.notifyDataSetChanged();

@@ -14,10 +14,8 @@ import com.adinaandsari.virtualbookstore.entities.Customer;
 public class AddOrder extends AppCompatActivity {
 
     //this book
-    Intent preIntent = getIntent();
-    Book bookToOrder = (Book) preIntent.getSerializableExtra(ConstValue.BOOK_KEY);
-    //this customer
-    Customer user = (Customer) preIntent.getSerializableExtra(ConstValue.CUSTOMER_KEY);
+    Book bookToOrder;
+    Customer user;
 
 
     @Override
@@ -35,6 +33,12 @@ public class AddOrder extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        //this book
+        Intent preIntent = getIntent();
+        bookToOrder = (Book) preIntent.getSerializableExtra(ConstValue.BOOK_KEY);
+        //this customer
+        user = (Customer) preIntent.getSerializableExtra(ConstValue.CUSTOMER_KEY);
     }
 
 }

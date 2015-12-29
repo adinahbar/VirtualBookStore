@@ -2,8 +2,6 @@ package com.adinaandsari.virtualbookstore;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -12,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.adinaandsari.virtualbookstore.entities.Book;
@@ -31,18 +30,20 @@ import java.util.Locale;
 public class UpdateBook extends AppCompatActivity {
 
     //this user
-    Intent preIntent = getIntent();
-    Supplier user = (Supplier) preIntent.getSerializableExtra(ConstValue.SUPPLIER_KEY);
+    Supplier user ;
 
     private Spinner categorySpinner , languageSpinner , idSpinner;
-    EditText editTextOfName,editTextOfAuthor,editTextOfPublisher,editTextOfSummary,editTextOfDatePublished
-            ,editTextOfPrice;
+    private EditText editTextOfName,editTextOfAuthor,editTextOfPublisher,editTextOfSummary,editTextOfDatePublished
+            ,editTextOfPrice,moreCopies;
+    private TextView numOfCopies;
     private String name ,author , publisher ,summary;
     double price;
     private Language language;
     private Category category;
     private Date datePublished;
-    Button updateButton;
+    private int bookID;
+    private Button updateButton;
+    private Backend backendFactory = com.adinaandsari.virtualbookstore.model.datasource.BackendFactory.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,41 +52,44 @@ public class UpdateBook extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //this user
+        Intent preIntent = getIntent();
+        user = (Supplier) preIntent.getSerializableExtra(ConstValue.SUPPLIER_KEY);
+
         //find all the viewers
         findView();
 
         //the category spinner
         String[] categoryList = getResources().getStringArray(R.array.category_array);
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,R.layout.support_simple_spinner_dropdown_item,categoryList);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item,categoryList);
         categorySpinner.setAdapter(dataAdapter);
 
-        //the category spinner
+        //the language spinner
         String[] LanguageList = getResources().getStringArray(R.array.language_array);
-        ArrayAdapter<String> languageSpinnerAdapter = new ArrayAdapter<String>(this,R.layout.support_simple_spinner_dropdown_item,LanguageList);
+        ArrayAdapter<String> languageSpinnerAdapter = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item,LanguageList);
         languageSpinner.setAdapter(languageSpinnerAdapter);
 
         //try to load the data of the selected book
         try {
             //spinner for the id of the book
-            ArrayAdapter<String> dataIDAdapter = new ArrayAdapter<String>
-                    (this,R.layout.support_simple_spinner_dropdown_item,getBooksID(user.getNumID()));
+            String[] booksID = getBooksID(user.getNumID());
+            ArrayAdapter<String> dataIDAdapter = new ArrayAdapter<>
+                    (this,R.layout.support_simple_spinner_dropdown_item,booksID);
             idSpinner.setAdapter(dataIDAdapter);
             idSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            Spinner spinner = (Spinner) findViewById(R.id.id_spinner_update_book);
-            enterDetail();
-             }
-            @Override
-                                                    public void onNothingSelected(AdapterView<?> parent) {
-                                                    }
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    enterDetail();
+                }
 
-                                                }
-            );
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
         }
         catch (Exception e)
         {
-            Toast.makeText(UpdateBook.this, e.getMessage().toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(UpdateBook.this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
 
         //update button
@@ -111,11 +115,19 @@ public class UpdateBook extends AppCompatActivity {
                     }
                     language = Language.valueOf(languageSpinner.getSelectedItem().toString().toUpperCase());
                     category = Category.valueOf(categorySpinner.getSelectedItem().toString().toUpperCase());
+                    bookID = Integer.valueOf(idSpinner.getSelectedItem().toString());
+                    if (moreCopies.getText().toString().equals("")) //add more copies
+                    {
+                        int numOfMoreCopies = Integer.valueOf(moreCopies.getText().toString());
+                        if (numOfMoreCopies < 0)
+                            throw new Exception("ERROR: num of copies must be a positive number");
+                        backendFactory.addMoreCopiesToBook(bookID,numOfMoreCopies,user.getNumID(),user.getPrivilege());
+                    }
 
                     //try to update the book
-                    Backend backendFactory = com.adinaandsari.virtualbookstore.model.datasource.BackendFactory.getInstance();
+
                     Book bookToUpdate = new Book(author,name,category,datePublished,language,publisher,summary);
-                    bookToUpdate.setBookID(Integer.valueOf(idSpinner.getSelectedItem().toString()));
+                    bookToUpdate.setBookID(bookID);
 
                     backendFactory.updateBook(bookToUpdate,user.getNumID(),user.getPrivilege());
                     backendFactory.setPriceOfBookForSupplier(bookToUpdate.getBookID(),user.getNumID(),price);
@@ -128,7 +140,7 @@ public class UpdateBook extends AppCompatActivity {
 
                 } catch (Exception e) {
                     //print the exception in a toast view
-                    Toast.makeText(UpdateBook.this, "Failed to update the book:\n" + e.getMessage().toString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(UpdateBook.this, "Failed to update the book:\n" + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -146,6 +158,8 @@ public class UpdateBook extends AppCompatActivity {
         editTextOfDatePublished = (EditText)findViewById(R.id.published_date_edit_text_update_book);
         editTextOfName = (EditText)findViewById(R.id.book_name_edit_text_update_book);
         editTextOfPrice = (EditText)findViewById(R.id.book_price_edit_text_update_book);
+        numOfCopies = (TextView)findViewById(R.id.num_of_copies_for_a_book_update_book);
+        moreCopies = (EditText)findViewById(R.id.more_copies_edit_text_update_book);
         updateButton = (Button)findViewById(R.id.update_book_button);
     }
 
@@ -160,6 +174,8 @@ public class UpdateBook extends AppCompatActivity {
             editTextOfPublisher.setText(book.getPublisher());
             editTextOfSummary.setText(book.getSummary());
             editTextOfDatePublished.setText(book.getDatePublished().toString());
+            int copies = backendFactory.getNumOfBookCopiesForSupplier(book.getBookID(), user.getNumID());
+            numOfCopies.setText(String.valueOf(copies));
             editTextOfPrice.setText(String.valueOf(backendFactory.getPriceOfBookForSupplier(book.getBookID(), user.getNumID())));
             String languageString = book.getLanguage().toString().toLowerCase(Locale.ENGLISH);
             languageSpinner.setSelection(((ArrayAdapter<String>) languageSpinner.getAdapter()).getPosition(languageString));
@@ -168,7 +184,7 @@ public class UpdateBook extends AppCompatActivity {
         }
         catch (Exception e) {
             //print the exception in a toast view
-            Toast.makeText(UpdateBook.this, e.getMessage().toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(UpdateBook.this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 

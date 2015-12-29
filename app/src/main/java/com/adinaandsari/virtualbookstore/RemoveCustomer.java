@@ -21,9 +21,7 @@ import java.util.ArrayList;
 
 public class RemoveCustomer extends AppCompatActivity {
 
-    //this manager is entering the activity
-    Intent preIntent = getIntent();
-    Manager user = (Manager) preIntent.getSerializableExtra(ConstValue.MANAGER_KEY);
+    Manager user;
     private Spinner removeCustomerIdSpinner;
     private Long idToRemove;
     private Button removeCustomerButton;
@@ -47,6 +45,11 @@ public class RemoveCustomer extends AppCompatActivity {
         setContentView(R.layout.activity_remove_customer);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //this manager is entering the activity
+        Intent preIntent = getIntent();
+        user = (Manager) preIntent.getSerializableExtra(ConstValue.MANAGER_KEY);
+
         removeCustomerIdSpinner = (Spinner)findViewById(R.id.select_customer_to_remove__by_ID_spinner);
         removeCustomerButton = (Button)findViewById(R.id.remove_customer_button);
         try {

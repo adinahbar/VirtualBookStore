@@ -141,6 +141,12 @@
             <item>Remove manager</item>
             <item>Update manager</item>
         </string-array>
+    <string-array name="nav_drawer_items_customer">
+        <item>My Cart</item>
+        <item>Shop All Books</item>
+        <item>Shop By Category</item>
+        <item>Shop By Author</item>
+    </string-array>
         <!-- Content Description -->
         <string name="desc_list_item_icon">Item Icon</string>
 
@@ -151,4 +157,22 @@
             <item>@mipmap/ic_people</item>
         </array>
     <string name="title_activity_shop_by_category">ShopByCategoryActivity</string>
+    <string name="title_activity_shop_by_author">ShopByAuthorActivity</string>
+    <string name="shop_by_author_text_view">Shop by author:</string>
+    <string name="num_of_copies">Num of copies:</string>
+    <string name="enter_number">enter a number</string>
+    <string name="more_copies">For more copies:</string>
+    <string name="title_activity_shop_all_book">shopAllBook</string>
+    <string name="title_activity_customer_cart">CustomerCart</string>
+    <string name="num_of_credit_card">Num of credit card:</string>
+    <string name="enter_credit_card">enter credit card</string>
+    <string name="your_cart">Your cart:\nTo remove press on the specific order</string>
+    <string name="finish_and_pay">Finish and Pay</string>
+    <string name="show_cart_orders">Show Cart Orders</string>
+    <string name="price">Price</string>
+    <string name="title_activity_remove_manager">RemoveManager</string>
+    <string name="remove_manager_text">To remove the manager you must enter another one.\nPress the button to remove.</string>
+    <string name="remove_button_text">Remove</string>
+    <string name="detail_about_manager">Detail about the manager:</string>
+    <string name="are_you_sure">Are you sure you want to remove it?</string>
 </resources>
