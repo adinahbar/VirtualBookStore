@@ -102,6 +102,7 @@ public class SupplierActivity extends AppCompatActivity
             intent.putExtra(ConstValue.SUPPLIER_KEY, user);
             startActivity(intent);
         }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_supplier);
         drawer.closeDrawer(GravityCompat.START);
         return true;
