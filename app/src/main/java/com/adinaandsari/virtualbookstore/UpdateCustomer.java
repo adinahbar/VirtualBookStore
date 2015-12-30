@@ -168,16 +168,19 @@ public class UpdateCustomer extends AppCompatActivity {
             editTextOfAddress.setText(customer.getAddress());
             editTextOfPhoneNumber.setText(customer.getPhoneNumber());
             editTextOfEmail.setText(customer.getEmailAddress());
-            editTextOfBirthday.setText(customer.getBirthDay().toString());
+            DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+            editTextOfBirthday.setText(df.format(customer.getBirthDay()));
             editTextOfCreditCard.setText(customer.getNumOfCreditCard());
             vipCheckBox.setChecked(customer.isVIP());
             switch (customer.getGender())
             {
                 case MALE:
                     male.setChecked(true);
+                    female.setChecked(false);
                     break;
                 case FEMALE:
                     female.setChecked(true);
+                    male.setChecked(false);
                     break;
             }
             String statusString = customer.getStatus().toString().toLowerCase(Locale.ENGLISH);

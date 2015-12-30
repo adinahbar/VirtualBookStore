@@ -26,7 +26,6 @@ public class CustomerActivity extends AppCompatActivity
     Customer user;
 
     Backend backendFactory = BackendFactory.getInstance();
-    private Book bookOfTheStore = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,29 +52,6 @@ public class CustomerActivity extends AppCompatActivity
         String text = "Dear " + user.getName() +
              "\nWe invite you to see our special books!!";
         name.setText(text);
-
-        //the book of the store
-        TextView bookOfTheStoreText = (TextView) findViewById(R.id.book_of_the_store_textView);
-        try {
-            bookOfTheStore = backendFactory.bookOfTheStore();
-            bookOfTheStoreText.setText(bookOfTheStore.getBookName());
-        } catch (Exception e) {
-            bookOfTheStoreText.setText("There are no best seller book to watch");
-        }
-        Button shopBookOfTheStoreButton = (Button)findViewById(R.id.shop_book_of_the_store_button_customer);
-        shopBookOfTheStoreButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (bookOfTheStore != null) {
-                    //go to the order activity for this book and customer
-                    Intent intent = new Intent(CustomerActivity.this, BookPage.class);
-                    intent.putExtra(ConstValue.BOOK_KEY, bookOfTheStore);//add the book
-                    intent.putExtra(ConstValue.CUSTOMER_KEY, user);//add the customer
-                    startActivity(intent);
-                }
-                Toast.makeText(CustomerActivity.this, "There are no book of the store for now", Toast.LENGTH_LONG).show();
-            }
-        });
     }
 
     @Override
@@ -128,6 +104,9 @@ public class CustomerActivity extends AppCompatActivity
                 break;
             case R.id.shopByAuthors:
                 intent = new Intent(CustomerActivity.this, ShopByAuthorActivity.class);
+                break;
+            case R.id.bookOfTheStore:
+                intent = new Intent(CustomerActivity.this, BookOfTheStore.class);
                 break;
             default:
                 break;

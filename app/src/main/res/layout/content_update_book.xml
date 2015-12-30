@@ -187,7 +187,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/book_price_edit_text_update_book"
             android:layout_weight="1"
-            android:inputType="numberDecimal"
             android:hint="@string/enter_book_price" />
     </LinearLayout>
     <LinearLayout

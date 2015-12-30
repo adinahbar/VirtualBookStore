@@ -8,4 +8,5 @@ public class ConstValue {
     final static String MANAGER_KEY = "com.adinaandsari.virtualbookstore.manger";
     final static String SUPPLIER_KEY = "com.adinaandsari.virtualbookstore.supplier";
     final static String BOOK_KEY = "com.adinaandsari.virtualbookstore.book";
+    final static String BOOK_LIST_KEY = "com.adinaandsari.virtualbookstore.bookList";
 }

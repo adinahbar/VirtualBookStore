@@ -29,15 +29,6 @@ public class ManagerActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         //this manager
         Intent preIntent = getIntent();
         user = (Manager) preIntent.getSerializableExtra(ConstValue.MANAGER_KEY);
@@ -112,14 +103,11 @@ public class ManagerActivity extends AppCompatActivity
             case R.id.removeOpinion:
                 //intent = new Intent(ManagerActivity.this, .class);
                 break;
-            case R.id.addManager:
-                intent = new Intent(ManagerActivity.this, AddManager.class);
+            case R.id.updateManager:
+                intent = new Intent(ManagerActivity.this, UpdateManager.class);
                 break;
             case R.id.removeManager:
                 intent = new Intent(ManagerActivity.this, RemoveManager.class);
-                break;
-            case R.id.updateManager:
-                intent = new Intent(ManagerActivity.this, UpdateManager.class);
                 break;
             default:
                 break;

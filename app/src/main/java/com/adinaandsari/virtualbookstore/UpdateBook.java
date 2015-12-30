@@ -116,7 +116,7 @@ public class UpdateBook extends AppCompatActivity {
                     language = Language.valueOf(languageSpinner.getSelectedItem().toString().toUpperCase());
                     category = Category.valueOf(categorySpinner.getSelectedItem().toString().toUpperCase());
                     bookID = Integer.valueOf(idSpinner.getSelectedItem().toString());
-                    if (moreCopies.getText().toString().equals("")) //add more copies
+                    if (!moreCopies.getText().toString().equals("")) //add more copies
                     {
                         int numOfMoreCopies = Integer.valueOf(moreCopies.getText().toString());
                         if (numOfMoreCopies < 0)
@@ -173,7 +173,8 @@ public class UpdateBook extends AppCompatActivity {
             editTextOfAuthor.setText(book.getAuthor());
             editTextOfPublisher.setText(book.getPublisher());
             editTextOfSummary.setText(book.getSummary());
-            editTextOfDatePublished.setText(book.getDatePublished().toString());
+            DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+            editTextOfDatePublished.setText(df.format(book.getDatePublished()));
             int copies = backendFactory.getNumOfBookCopiesForSupplier(book.getBookID(), user.getNumID());
             numOfCopies.setText(String.valueOf(copies));
             editTextOfPrice.setText(String.valueOf(backendFactory.getPriceOfBookForSupplier(book.getBookID(), user.getNumID())));

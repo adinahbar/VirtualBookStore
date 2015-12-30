@@ -36,7 +36,7 @@ public class UpdateManager extends AppCompatActivity {
         editTextOfName = (EditText)findViewById(R.id.name_edit_text_update_manager);
         editTextOfAddress = (EditText)findViewById(R.id.address_edit_text_update_manager);
         editTextOfPhoneNumber = (EditText)findViewById(R.id.phone_number_edit_text_update_manager);
-        editTextOfEmail = (EditText)findViewById(R.id.email_edit_text_add_manager);
+        editTextOfEmail = (EditText)findViewById(R.id.email_edit_text_update_manager);
         editTextOfYearsInCompany = (EditText)findViewById(R.id.years_in_company_edit_text_update_manager);
         male = (CheckBox) findViewById(R.id.male_checkBox_update_manager);
         female = (CheckBox) findViewById(R.id.female_checkBox_update_manager);
@@ -54,6 +54,7 @@ public class UpdateManager extends AppCompatActivity {
         findView();
         //enter the data of the manager
         enterDetail();
+
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,21 +109,23 @@ public class UpdateManager extends AppCompatActivity {
             editTextOfAddress.setText(manager.getAddress());
             editTextOfPhoneNumber.setText(manager.getPhoneNumber());
             editTextOfEmail.setText(manager.getEmailAddress());
-            editTextOfYearsInCompany.setText(manager.getYearsInCompany());
+            editTextOfYearsInCompany.setText(String.valueOf(manager.getYearsInCompany()));
             switch (manager.getGender())
             {
                 case MALE:
                     male.setChecked(true);
+                    female.setChecked(false);
                     break;
                 case FEMALE:
                     female.setChecked(true);
+                    male.setChecked(false);
                     break;
             }
 
         }
         catch (Exception e) {
             //print the exception in a toast view
-            Toast.makeText(UpdateManager.this, e.getMessage().toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(UpdateManager.this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 

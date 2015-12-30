@@ -80,9 +80,11 @@ public class BookListFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_list_book, container, false);
         Intent i = getActivity().getIntent();
-        bookArrayList = (ArrayList<Book>)i.getSerializableExtra("bookList");
-        bookItemForLists = new ArrayList<BookItemForList>();
+        bookArrayList = (ArrayList<Book>)i.getSerializableExtra(ConstValue.BOOK_LIST_KEY);
+        bookItemForLists = new ArrayList<>();
         for(Book b : bookArrayList)
         {
             bookItemForLists.add(new BookItemForList(b.getBookName(),b.getBookID(),b.getAuthor()));
@@ -125,8 +127,7 @@ public class BookListFragment extends DialogFragment {
             }
         });
         adapter.notifyDataSetChanged();
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_list_book, container, false);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -137,15 +137,15 @@
             <item>Remove customer</item>
             <item>Update customer</item>
             <item>Remove opinion</item>
-            <item>Add manager</item>
-            <item>Remove manager</item>
             <item>Update manager</item>
+            <item>Remove manager</item>
         </string-array>
     <string-array name="nav_drawer_items_customer">
         <item>My Cart</item>
         <item>Shop All Books</item>
         <item>Shop By Category</item>
-        <item>Shop By Author</item>
+        <item>Shop By Authors</item>
+        <item>Book Of The Store</item>
     </string-array>
         <!-- Content Description -->
         <string name="desc_list_item_icon">Item Icon</string>
@@ -175,4 +175,6 @@
     <string name="remove_button_text">Remove</string>
     <string name="detail_about_manager">Detail about the manager:</string>
     <string name="are_you_sure">Are you sure you want to remove it?</string>
+    <string name="title_activity_book_of_the_store">BookOfTheStore</string>
+    <string name="choose_option">Please choose an option</string>
 </resources>

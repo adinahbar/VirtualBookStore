@@ -78,10 +78,10 @@ public class AddManager extends AppCompatActivity {
                     Backend backendFactory = com.adinaandsari.virtualbookstore.model.datasource.BackendFactory.getInstance();
                     Manager manager = new Manager(id, name, address, phoneNumber, email, gender,yearsInCompany);
                     backendFactory.addManger(manager, Privilege.MANAGER);
-                    Toast.makeText(AddManager.this, "The update has been successful!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(AddManager.this, "The addition has been successful!", Toast.LENGTH_LONG).show();
 
                     //go back to the activity
-                    Intent intent = new Intent(AddManager.this, Manager.class);
+                    Intent intent = new Intent(AddManager.this, ManagerActivity.class);
                     intent.putExtra(ConstValue.MANAGER_KEY, manager);//add the specific manager
                     startActivity(intent);
 

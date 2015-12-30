@@ -240,7 +240,7 @@ public class DatabaseList implements Backend {
      */
     @Override
     public void addOrder(Order order, Privilege privilege) throws Exception {
-        if (privilege != Privilege.MANAGER) //check that only the manager can add an order
+        if (privilege == Privilege.SUPPLIER) //check that the supplier can not add an order
             throw new Exception("ERROR: you aren't privileged to add an order");
         //check that all the entities are correct
         findCustomerByID(order.getCustomerNumID());
@@ -364,7 +364,7 @@ public class DatabaseList implements Backend {
             if (privilege != Privilege.MANAGER) //check that only the manager can remove a Customer
                 throw new Exception("ERROR: you aren't privileged to add a customer");
             Customer customerToDelete = findCustomerByID(customerID); //try to get the Customer
-            suppliers.remove(customerToDelete); // remove the Customer
+            customers.remove(customerToDelete); // remove the Customer
         }
 
     }
@@ -767,7 +767,7 @@ public class DatabaseList implements Backend {
     public  ArrayList<Order> finishOrder (long customerId)throws Exception
     {
         ArrayList<Order> customerOrders=new ArrayList<Order>();
-        for (Order o:customerOrders)//loop to go on orders
+        for (Order o:orders)//loop to go on orders
         {
             if (o.isPaid() != true && o.getCustomerNumID() == customerId) {
                 customerOrders.add(o);
@@ -882,7 +882,7 @@ public class DatabaseList implements Backend {
             if (supplierAndBookItem.getBookID() ==bookID &&supplierAndBookItem.getSupplierID()==supplierID) //check that this supplier and book exists
             {
                supplierAndBookItem.setPrice(price);
-                break;
+                return;
             }
         //the supplier and book does not exist
         throw new Exception("ERROR:there is no supplier that provides this book");

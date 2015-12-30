@@ -14,6 +14,7 @@ import com.adinaandsari.virtualbookstore.entities.Customer;
 import com.adinaandsari.virtualbookstore.entities.Gender;
 import com.adinaandsari.virtualbookstore.entities.Language;
 import com.adinaandsari.virtualbookstore.entities.Manager;
+import com.adinaandsari.virtualbookstore.entities.Order;
 import com.adinaandsari.virtualbookstore.entities.Privilege;
 import com.adinaandsari.virtualbookstore.entities.Status;
 import com.adinaandsari.virtualbookstore.entities.Supplier;
@@ -42,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
             Book bookToAdd = new Book("ab","aa", Category.ARTS,new Date(1995,7,8), Language.FRENCH,"aa","very nice");
             backendFactory.addBook(bookToAdd, 456789123,456789123 , Privilege.SUPPLIER,
                     5, 99);
+            Order order = new Order(bookToAdd.getBookID(),supplierToAdd.getNumID(),customerToAdd.getNumID(),1);
+            order.setPaid(false);
+            backendFactory.addOrder(order,Privilege.MANAGER);
         }
         catch (Exception e)
         {

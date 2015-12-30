@@ -6,6 +6,7 @@ import java.io.Serializable;
  * Created by A&S on 05/11/2015.
  */
 public class Order implements Serializable {
+    private static final long serialVersionUID = 1L;
     /**
      * attributes
      */

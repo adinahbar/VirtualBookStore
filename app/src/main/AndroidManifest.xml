@@ -130,6 +130,11 @@
             android:label="@string/title_activity_remove_manager"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
+        <activity
+            android:name=".BookOfTheStore"
+            android:label="@string/title_activity_book_of_the_store"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
     </application>
 
 </manifest>

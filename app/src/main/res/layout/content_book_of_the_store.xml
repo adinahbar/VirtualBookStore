@@ -7,36 +7,46 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/app_bar_main"
-    tools:context="com.adinaandsari.virtualbookstore.SupplierActivity"
-    android:orientation="vertical"
-    android:background="#ffffff">
-    <!-- Framelayout to display Fragments -->
-    <FrameLayout
-        android:id="@+id/frame_container"
+    tools:showIn="@layout/activity_book_of_the_store"
+    tools:context="com.adinaandsari.virtualbookstore.BookOfTheStore"
+    android:orientation="vertical">
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_weight="6">
+
+        <ImageView
+            android:layout_width="236dp"
+            android:layout_height="240dp"
+            android:id="@+id/book_of_the_store_image"
+            android:src="@drawable/best_seller"
+            android:layout_gravity="center"
+            android:layout_weight="2"/>
+
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:weightSum="2">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/welcome_to_press_book"
-                android:textColor="#5f5bac"
-                android:textStyle="italic"
-                android:id="@+id/welcome_textView_supplier"
-                android:textSize="27dp"
+                android:text=""
+                android:id="@+id/book_of_the_store_textView"
+                android:layout_weight="2"
                 android:layout_gravity="center" />
-            <TextView
+
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/invite_theSupplier_textView_supplier"
-                android:layout_gravity="center"
-                android:textSize="16dp"
-                android:gravity="center_vertical|center_horizontal" />
+                android:text="@string/shop_it_text"
+                android:id="@+id/shop_book_of_the_store_button_customer"
+                android:layout_gravity="center" />
         </LinearLayout>
-    </FrameLayout>
+
+    </LinearLayout>
+
 </LinearLayout>

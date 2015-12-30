@@ -16,71 +16,34 @@
     <FrameLayout
         android:id="@+id/frame_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="3"
-        android:weightSum="1">
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/welcome_to_press_book"
-            android:textColor="#5f5bac"
-            android:textStyle="italic"
-            android:id="@+id/welcome_textView_customer"
-            android:textSize="25dp"
-            android:layout_gravity="top|center"
-            android:gravity="center"
-            android:layout_weight="2" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/name_of_customer_textView_customer"
-            android:text="@string/name_text_view"
-            android:layout_gravity="bottom|center"
-            android:gravity="center_vertical|center_horizontal"
-            android:layout_weight="1" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="6">
-
-        <ImageView
-            android:layout_width="236dp"
-            android:layout_height="240dp"
-            android:id="@+id/book_of_the_store_image"
-            android:src="@drawable/best_seller"
-            android:layout_gravity="center"
-            android:layout_weight="3"/>
+        android:layout_height="match_parent" >
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="3"
-            android:weightSum="2">
+            android:weightSum="1">
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/welcome_to_press_book"
+                android:textColor="#5f5bac"
+                android:textStyle="italic"
+                android:id="@+id/welcome_textView_customer"
+                android:textSize="25dp"
+                android:layout_gravity="top|center"
+                android:gravity="center"
+                android:layout_weight="2" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
-                android:id="@+id/book_of_the_store_textView"
-                android:layout_gravity="left"
-                android:layout_weight="2"/>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/shop_it_text"
-                android:id="@+id/shop_book_of_the_store_button_customer"
-                android:layout_gravity="right"/>
+                android:id="@+id/name_of_customer_textView_customer"
+                android:text="@string/name_text_view"
+                android:layout_gravity="bottom|center"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_weight="1" />
         </LinearLayout>
-
-    </LinearLayout>
+    </FrameLayout>
 </LinearLayout>

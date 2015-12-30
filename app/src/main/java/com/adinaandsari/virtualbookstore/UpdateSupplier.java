@@ -153,9 +153,11 @@ public class UpdateSupplier extends AppCompatActivity {
             {
                 case MALE:
                     male.setChecked(true);
+                    female.setChecked(false);
                     break;
                 case FEMALE:
                     female.setChecked(true);
+                    male.setChecked(false);
                     break;
             }
             String typeString = supplier.getType().toString().toLowerCase(Locale.ENGLISH);

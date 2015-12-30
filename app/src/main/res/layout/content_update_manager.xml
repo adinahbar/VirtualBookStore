@@ -22,9 +22,11 @@
             android:layout_height="wrap_content"
             android:text="@string/id_text_view"
             android:id="@+id/id_text_view_update_manager" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="New Text"
             android:id="@+id/id_of_manager_text_view_update_manager" />
     </LinearLayout>
     <LinearLayout
@@ -170,7 +172,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/add_button"
+            android:text="@string/Update_button"
             android:id="@+id/update_manager_button"
             android:layout_gravity="center_horizontal" />
     </LinearLayout>

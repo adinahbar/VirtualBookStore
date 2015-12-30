@@ -48,7 +48,7 @@ public class RemoveBook extends AppCompatActivity {
         //this supplier is entering the activity
         Intent preIntent = getIntent();
         user = (Supplier) preIntent.getSerializableExtra(ConstValue.SUPPLIER_KEY);
-        removeBookIdSpinner = (Spinner)findViewById(R.id.select_supplier_to_remove__by_ID_spinner);
+        removeBookIdSpinner = (Spinner)findViewById(R.id.select_book_to_remove__by_ID_spinner);
         removeBookButton = (Button)findViewById(R.id.remove_book_button);
         try {
             showDetail();
