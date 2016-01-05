@@ -54,6 +54,5 @@ public class ListOfPerson extends AppCompatActivity {
             }
         };
         listView.setAdapter(adapter);
-        this.setContentView(listView);
     }
 }
