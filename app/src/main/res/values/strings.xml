@@ -133,9 +133,10 @@
             <item>Add supplier</item>
             <item>Remove supplier</item>
             <item>Update supplier</item>
-            <item>Add customer</item>
+            <item>List of suppliers</item>
             <item>Remove customer</item>
             <item>Update customer</item>
+            <item>List of customers</item>
             <item>Remove opinion</item>
             <item>Update manager</item>
             <item>Remove manager</item>
@@ -152,7 +153,7 @@
 
         <!-- TODO: Remove or change this placeholder text -->
         <string name="hello_blank_fragment">Hello blank fragment</string>
-        <string name="sing">AdinaAndSari</string>
+        <string name="sing">Book Press</string>
         <array name="nav_drawer_icons">
             <item>@mipmap/ic_people</item>
         </array>
@@ -177,4 +178,8 @@
     <string name="are_you_sure">Are you sure you want to remove it?</string>
     <string name="title_activity_book_of_the_store">BookOfTheStore</string>
     <string name="choose_option">Please choose an option</string>
+    <string name="title_activity_list_of_person">ListOfPerson</string>
+    <string name="title_activity_remove_opinion">RemoveOpinion</string>
+    <string name="show_opinions_list">Show Opinions List</string>
+    <string name="select_opinion_remove">Select an opinion to remove:</string>
 </resources>

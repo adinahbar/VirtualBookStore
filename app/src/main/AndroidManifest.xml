@@ -116,7 +116,7 @@
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
-            android:name=".shopAllBook"
+            android:name=".ShopAllBook"
             android:label="@string/title_activity_shop_all_book"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
@@ -133,6 +133,16 @@
         <activity
             android:name=".BookOfTheStore"
             android:label="@string/title_activity_book_of_the_store"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".ListOfPerson"
+            android:label="@string/title_activity_list_of_person"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".RemoveOpinion"
+            android:label="@string/title_activity_remove_opinion"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
     </application>

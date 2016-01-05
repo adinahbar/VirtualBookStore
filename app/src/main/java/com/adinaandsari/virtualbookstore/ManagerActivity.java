@@ -13,8 +13,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import com.adinaandsari.virtualbookstore.entities.Customer;
 import com.adinaandsari.virtualbookstore.entities.Manager;
+import com.adinaandsari.virtualbookstore.entities.Supplier;
+import com.adinaandsari.virtualbookstore.model.datasource.BackendFactory;
+
+import java.util.ArrayList;
 
 public class ManagerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -91,14 +97,31 @@ public class ManagerActivity extends AppCompatActivity
             case R.id.updateSupplier:
                 intent = new Intent(ManagerActivity.this, UpdateSupplier.class);
                 break;
-            case R.id.addCustomer:
-                intent = new Intent(ManagerActivity.this, AddCustomerSingIn.class);
+            case R.id.listOfSuppliers:
+                intent = new Intent(ManagerActivity.this, ListOfPerson.class);
+                try {
+                    ArrayList<Supplier> suppliers = BackendFactory.getInstance().getSupplierList();
+                    intent.putExtra(ConstValue.PERSON_KEY, suppliers);
+                }catch (Exception e){
+                    //print the exception in a toast view
+                    Toast.makeText(ManagerActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                }
                 break;
             case R.id.removeCustomer:
                 intent = new Intent(ManagerActivity.this, RemoveCustomer.class);
                 break;
             case R.id.updateCustomer:
                 intent = new Intent(ManagerActivity.this, UpdateCustomer.class);
+                break;
+            case R.id.listOfCustomers:
+                intent = new Intent(ManagerActivity.this, ListOfPerson.class);
+                try {
+                    ArrayList<Customer> customers = BackendFactory.getInstance().getCustomerList(user.getPrivilege());
+                    intent.putExtra(ConstValue.PERSON_KEY, customers);
+                }catch (Exception e){
+                    //print the exception in a toast view
+                    Toast.makeText(ManagerActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                }
                 break;
             case R.id.removeOpinion:
                 //intent = new Intent(ManagerActivity.this, .class);

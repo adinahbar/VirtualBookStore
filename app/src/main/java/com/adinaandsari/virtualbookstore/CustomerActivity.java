@@ -112,7 +112,7 @@ public class CustomerActivity extends AppCompatActivity
                 break;
         }
         if (intent != null) {
-            intent.putExtra(ConstValue.CUSTOMER_KEY, user);
+           intent.putExtra(ConstValue.CUSTOMER_KEY, user);
             startActivity(intent);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_customer);

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:background="#FFFFFF"
+    android:weightSum="4">
+    <TextView
+        android:id="@+id/personIdTextView_row"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/id_text_view"
+        android:layout_weight="1"
+        android:layout_gravity="center" />
+    <TextView
+        android:id="@+id/personNameTextView_row"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/name_text_view"
+        android:layout_weight="1"
+        android:layout_gravity="center" />
+    <TextView
+        android:id="@+id/personPhoneNumTextView_row"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/phon_number_text_view"
+        android:layout_weight="1"
+        android:layout_gravity="center" />
+    <TextView
+        android:id="@+id/personEmailTextView_row"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/email_text_view"
+        android:layout_weight="1"
+        android:layout_gravity="center" />
+</LinearLayout>
