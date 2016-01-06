@@ -11,7 +11,6 @@
     tools:context="com.adinaandsari.virtualbookstore.RemoveOpinion"
     android:orientation="vertical"
     android:weightSum="4">
-
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -21,16 +20,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/select_opinion_remove"
-            android:id="@+id/select_opinion_to_remove_textView"
-            android:layout_gravity="center"
-            android:gravity="center" />
-        <Button
+            android:text="@string/book_id"
+            android:id="@+id/id_book_text_view_remove_opinion" />
+
+        <Spinner
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/show_opinions_list"
-            android:id="@+id/show_opinion_to_remove_button"
-            android:layout_gravity="center" />
+            android:id="@+id/id_book_spinner_remove_opinion"
+            android:layout_weight="1"
+            android:clickable="true" />
     </LinearLayout>
 
     <LinearLayout
@@ -39,16 +37,17 @@
         android:layout_height="match_parent"
         android:layout_weight="1">
 
-        <Spinner
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/select_opinion_to_remove_by_ID_spinner" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/remove_button_text"
-            android:id="@+id/remove_opinion_button"
-            android:layout_gravity="center" />
+            android:text="@string/press_opinion_remove"
+            android:id="@+id/select_opinion_to_remove_textView"
+            android:layout_gravity="center"
+            android:gravity="center" />
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/listView_of_opinion_remove_opinion"
+            android:layout_gravity="center_horizontal" />
     </LinearLayout>
 </LinearLayout>

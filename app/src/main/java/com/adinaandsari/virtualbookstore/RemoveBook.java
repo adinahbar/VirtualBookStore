@@ -27,7 +27,7 @@ public class RemoveBook extends AppCompatActivity {
     private Button removeBookButton;
     void showDetail()throws Exception
     {
-        ArrayList<Book> books = BackendFactory.getInstance().getBookList();
+        ArrayList<Book> books = BackendFactory.getInstance().bookListBySupplier(user.getNumID());
         String[] ids = new String[books.size()];
         int i=0;
         for (Book b:books)

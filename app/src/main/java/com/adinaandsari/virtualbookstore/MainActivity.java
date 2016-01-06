@@ -32,16 +32,23 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         try{
             Backend backendFactory = com.adinaandsari.virtualbookstore.model.datasource.BackendFactory.getInstance();
-            Manager manager = new Manager(123456789, "aa", "aa", "00", "@", Gender.MALE,5);
+            Manager manager = new Manager(123456789, "manager", "aa", "00", "@", Gender.MALE,5);
             backendFactory.addManger(manager, Privilege.MANAGER);
-            Customer customerToAdd = new Customer(987654321,"aa", "aa", "00", "@", Gender.MALE,
+            Customer customerToAdd = new Customer(987654321,"customer", "aa", "00", "@", Gender.MALE,
                     new Date(1995,7,8), "", Status.MARRIED);
             backendFactory.addCustomer(customerToAdd, Privilege.MANAGER);
-            Supplier supplierToAdd = new Supplier(456789123,"aa", "aa", "00", "@", Gender.MALE,
+            Supplier supplierToAdd = new Supplier(456789123,"supplier", "aa", "00", "@", Gender.MALE,
                     "555", "55", SupplierType.WRITER);
             backendFactory.addSupplier(supplierToAdd, Privilege.MANAGER);
             Book bookToAdd = new Book("ab","aa", Category.ARTS,new Date(1995,7,8), Language.FRENCH,"aa","very nice");
+            Book bookToAdd2 = new Book("ab","aa", Category.ARTS,new Date(1995,7,8), Language.FRENCH,"aa","very nice");
+            Book bookToAdd3 = new Book("ab","aa", Category.ARTS,new Date(1995,7,8), Language.FRENCH,"aa","very nice");
+
             backendFactory.addBook(bookToAdd, 456789123,456789123 , Privilege.SUPPLIER,
+                    5, 99);
+            backendFactory.addBook(bookToAdd2, 456789123,456789123 , Privilege.SUPPLIER,
+                    5, 99);
+            backendFactory.addBook(bookToAdd3, 456789123,456789123 , Privilege.SUPPLIER,
                     5, 99);
             Order order = new Order(bookToAdd.getBookID(),supplierToAdd.getNumID(),customerToAdd.getNumID(),1);
             order.setPaid(false);

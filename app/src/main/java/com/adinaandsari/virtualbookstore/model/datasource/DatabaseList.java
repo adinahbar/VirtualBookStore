@@ -609,7 +609,7 @@ public class DatabaseList implements Backend {
         ArrayList<Book> listToReturn = new ArrayList<>();
         for (Book bookItem : books)
             if (bookItem.getBooksCategory() == category) //check that the books belong to a specific category
-                listToReturn.add(new Book(bookItem));
+                listToReturn.add(bookItem);
         return listToReturn;
     }
     /**
@@ -625,7 +625,7 @@ public class DatabaseList implements Backend {
         ArrayList<Book> listToReturn = new ArrayList<>();
         for (Book bookItem : books)
             if (bookItem.getAuthor() == authorsName) //check that the books belong to a specific author
-                listToReturn.add(new Book(bookItem));
+                listToReturn.add(bookItem);
         return listToReturn;
     }
     /**
@@ -642,7 +642,7 @@ public class DatabaseList implements Backend {
         boolean exist = false;
         for (Book book : books)
         {
-            name = book.getBookName();
+            name = book.getAuthor();
             for (String n : authorsName) //check that it is not exist in the list all ready
             {
                 if (n == name) {
@@ -928,7 +928,7 @@ public class DatabaseList implements Backend {
         if (orderOfBookArrayList.size() == 0) //if there are no order
             throw new Exception("there are no order in the store");
         //get the max ordered book and return it
-        int max =0;
+        int max =orderOfBookArrayList.get(1).numOfOrder;
         long mostOrderBookID = orderOfBookArrayList.get(1).orderBookID;
         for (OrderOfBook orderOfBook : orderOfBookArrayList){
             if (max < orderOfBook.numOfOrder)

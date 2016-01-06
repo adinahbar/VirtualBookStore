@@ -25,6 +25,8 @@ import com.adinaandsari.virtualbookstore.entities.Supplier;
 import com.adinaandsari.virtualbookstore.entities.SupplierAndBook;
 import com.adinaandsari.virtualbookstore.model.datasource.BackendFactory;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,9 +36,9 @@ public class BookPage extends AppCompatActivity {
             textViewOfDatePublished,textViewOfID,textViewOfNumOfPages,
             textViewOfCategory, textViewOFLanguage, textViewOFRate;
     EditText editTextNumOfPages;
-    private Spinner suppliersSpinner , opinionsSpinner;
+    private Spinner suppliersSpinner ;
     private ImageButton addToCartButton ;
-    private List<BookItemForList> supplierItemForSpinner;
+    private List<BookItemForList> supplierItemForSpinner = new ArrayList<>();
     private BookItemForList selectedFromSpinner;
     private Supplier selectedSupplier;
     private int numOfPages;
@@ -66,43 +68,31 @@ public class BookPage extends AppCompatActivity {
     //function to show to book's detail
     void showDetail()throws Exception
     {
-        numOfPages=Integer.parseInt(editTextNumOfPages.getText().toString());
         textViewOfName.setText(book.getBookName());
         textViewOfAuthor.setText(book.getAuthor());
         textViewOfPublisher.setText(book.getPublisher());
         textViewOFRate.setText(String.valueOf(book.getRateAVR()));
         textViewOfSummary.setText(book.getSummary());
-        textViewOfDatePublished.setText(book.getDatePublished().toString());
-        textViewOfID.setText(book.getBookID());
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        textViewOfDatePublished.setText(df.format(book.getDatePublished()));
+        textViewOfID.setText(String.valueOf(book.getBookID()));
         textViewOfCategory.setText(book.getBooksCategory().toString());
         textViewOFLanguage.setText(book.getLanguage().toString());
         ArrayList<SupplierAndBook> supplierAndBooks = BackendFactory.getInstance().supplierListByBook(book.getBookID());
         for(SupplierAndBook s : supplierAndBooks)
         {
             Supplier supplier=BackendFactory.getInstance().findSupplierByID(s.getSupplierID());
-            supplierItemForSpinner.add(new BookItemForList(supplier.getName(),s.getSupplierID(),String.valueOf(s.getPrice())));
+            supplierItemForSpinner.add(new BookItemForList("\t"+supplier.getName()+"\t",
+                    s.getSupplierID(),"\t"+String.valueOf(s.getPrice())+" NIS"));
         }
-        ArrayAdapter<BookItemForList> adapter = new ArrayAdapter<BookItemForList>(this, android.R.layout.simple_spinner_item,supplierItemForSpinner);
+        ArrayAdapter<BookItemForList> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,supplierItemForSpinner);
         suppliersSpinner.setAdapter(adapter);
-        suppliersSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-        @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id){
-            selectedFromSpinner = (BookItemForList)suppliersSpinner.getSelectedItem();
-        }
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) {
-        }
-        }
-        );
-
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_page);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         //this user
         Intent preIntent = getIntent();
@@ -113,24 +103,48 @@ public class BookPage extends AppCompatActivity {
         findView();
         try {
             showDetail();
-            for (Supplier s : BackendFactory.getInstance().getSupplierList()) {
-                if (s.getNumID()==selectedFromSpinner.getId())
-                {
-                    selectedSupplier=s;
-                }
-            }
         }catch (Exception e)
         {
             //print the exception in a toast view
             Toast.makeText(BookPage.this, "Failed to show the book's detail:\n" + e.getMessage().toString(), Toast.LENGTH_LONG).show();
         }
 
+        suppliersSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+           @Override
+           public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id){
+               selectedFromSpinner = (BookItemForList)adapterView.getItemAtPosition(position);
+           }
+           @Override
+           public void onNothingSelected(AdapterView<?> parent) {
+           }
+       }
+        );
+
         addToCartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    Order currentOrder = new Order(book.getBookID(), selectedSupplier.getNumID(), customer.getNumID(), numOfPages);
+                    //get the values
+                    ArrayList<Supplier> suppliers = BackendFactory.getInstance().getSupplierList();
+                    for (Supplier s : suppliers) {
+                        if (s.getNumID()==selectedFromSpinner.getId())
+                        {
+                            selectedSupplier=s;
+                        }
+                    }
+                    if (!editTextNumOfPages.getText().toString().equals("")) //add more copies
+                    {
+                        numOfPages=Integer.parseInt(editTextNumOfPages.getText().toString());
+                        if (numOfPages < 0)
+                            throw new Exception("ERROR: num of copies must be a positive number");
+                    }
+                    else{
+                        throw new Exception("ERROR: you does not enter the number of copies that you want");
+                    }
+                    //add the order
+                    Order currentOrder = new Order(book.getBookID(), selectedFromSpinner.getId(), customer.getNumID(), numOfPages);
                     BackendFactory.getInstance().addOrder(currentOrder, Privilege.MANAGER);
+                    Toast.makeText(BookPage.this, "We add it to your cart!", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(BookPage.this, CustomerActivity.class);//going to previous activity with this supplier details
                     intent.putExtra(ConstValue.CUSTOMER_KEY, customer);
                     startActivity(intent);

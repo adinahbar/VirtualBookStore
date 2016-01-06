@@ -34,7 +34,7 @@ public class ShopByCategoryActivity extends AppCompatActivity {
         //the category spinner
         categorySpinner = (Spinner) findViewById(R.id.category_spinner_shop_by_category);
         String[] oldCategoryList = getResources().getStringArray(R.array.category_array);
-        String[] categoryList = new String[oldCategoryList.length];
+        String[] categoryList = new String[oldCategoryList.length + 1];
         int i=1;
         categoryList[0] = "No Category was selected";
         for(String s:oldCategoryList)
@@ -46,24 +46,25 @@ public class ShopByCategoryActivity extends AppCompatActivity {
         categorySpinner.setAdapter(dataAdapter);
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
                 //the first time
-                if (categorySpinner.getSelectedItem().toString().equals("No Category was selected"))
+                String chosenCategory = (String)adapterView.getItemAtPosition(position);
+                if (chosenCategory.equals("No Category was selected"))
                 {
                     FragmentManager fragmentManager = getFragmentManager();
                     BlankFragment fragment = new BlankFragment();
-                    fragmentManager.beginTransaction().replace(R.id.bookList_frame_layout, fragment).commit();
+                    fragmentManager.beginTransaction().replace(R.id.bookList_frame_layout_shop_by_category, fragment).commit();
                 }
                 else//for a chosen category
                 {
-                    Category category = Category.valueOf(categorySpinner.getSelectedItem().toString().toUpperCase());
+                    Category category = Category.valueOf(chosenCategory.toUpperCase());
                     Backend backendFactory = com.adinaandsari.virtualbookstore.model.datasource.BackendFactory.getInstance();
                     try {
                         ArrayList<Book> books = backendFactory.bookListSortedByCategory(category);
-                        getIntent().putExtra(ConstValue.BOOK_LIST_KEY, books);
                         FragmentManager fragmentManager = getFragmentManager();
                         BookListFragment fragment = new BookListFragment();
-                        fragmentManager.beginTransaction().replace(R.id.bookList_frame_layout, fragment).commit();
+                        fragment.setBookArrayList(books);
+                        fragmentManager.beginTransaction().replace(R.id.bookList_frame_layout_shop_by_category, fragment).commit();
                     } catch (Exception e) {
                         Toast.makeText(ShopByCategoryActivity.this, "There are no books for now", Toast.LENGTH_LONG).show();
                     }

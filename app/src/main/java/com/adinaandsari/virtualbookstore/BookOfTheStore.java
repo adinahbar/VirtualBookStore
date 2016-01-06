@@ -56,7 +56,9 @@ public class BookOfTheStore extends AppCompatActivity {
                     intent.putExtra(ConstValue.CUSTOMER_KEY, user);//add the customer
                     startActivity(intent);
                 }
-                Toast.makeText(BookOfTheStore.this, "There are no book of the store for now", Toast.LENGTH_LONG).show();
+                else{
+                    Toast.makeText(BookOfTheStore.this, "There are no book of the store for now", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
