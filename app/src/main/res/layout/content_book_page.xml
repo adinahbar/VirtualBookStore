@@ -9,6 +9,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_book_page"
     tools:context="com.adinaandsari.virtualbookstore.BookPage"
+    android:background="#ffffff"
     android:orientation="vertical"
     android:weightSum="12">
     <LinearLayout
@@ -31,11 +32,12 @@
             android:id="@+id/the_id_book_text_view_book_page" />
 
         <ImageButton
-            android:src="@drawable/add_to_cart"
+            android:src="@drawable/add_to_cart_icon"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text=""
             android:id="@+id/add_to_cart_button"
+            android:background="#ffffff"
             android:layout_weight="2"
             android:gravity="right" />
     </LinearLayout>

@@ -70,12 +70,20 @@ public class DatabaseList implements Backend {
             case SUPPLIER:
                 Book bookToDelete=findBookByID(bookID);//get the book
                 boolean flag = false;
+                for (Order o :orders)
+                {
+                    if (o.getOrderID()== userID && o.getBookID()==bookID)
+                    {
+                        throw new Exception("ERROR: you can not remove this book because it is in orders of customer");
+                    }
+                }
                 for (SupplierAndBook supplierAndBookItem : supplierAndBooks) //delete the supplier and book with this book
                 {
                     if (supplierAndBookItem.getBookID() == bookID && supplierAndBookItem.getSupplierID() == userID ) //check if the supplier delete is own books
                     {
                         supplierAndBooks.remove(supplierAndBookItem);
                         flag = true;
+                        break;
                     }
                 }
                 if (!flag)//the supplier try to delete a book of another supplier

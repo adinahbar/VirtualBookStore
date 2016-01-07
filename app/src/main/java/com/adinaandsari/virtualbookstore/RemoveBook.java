@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.adinaandsari.virtualbookstore.entities.Book;
 import com.adinaandsari.virtualbookstore.entities.Manager;
 import com.adinaandsari.virtualbookstore.entities.Supplier;
+import com.adinaandsari.virtualbookstore.model.backend.Backend;
 import com.adinaandsari.virtualbookstore.model.datasource.BackendFactory;
 
 import java.util.ArrayList;
@@ -25,9 +26,10 @@ public class RemoveBook extends AppCompatActivity {
     private Spinner removeBookIdSpinner;
     private Long idToRemove;
     private Button removeBookButton;
+    Backend backend;
     void showDetail()throws Exception
     {
-        ArrayList<Book> books = BackendFactory.getInstance().bookListBySupplier(user.getNumID());
+        ArrayList<Book> books = backend.bookListBySupplier(user.getNumID());
         String[] ids = new String[books.size()];
         int i=0;
         for (Book b:books)
@@ -48,6 +50,7 @@ public class RemoveBook extends AppCompatActivity {
         //this supplier is entering the activity
         Intent preIntent = getIntent();
         user = (Supplier) preIntent.getSerializableExtra(ConstValue.SUPPLIER_KEY);
+        backend = BackendFactory.getInstance();
         removeBookIdSpinner = (Spinner)findViewById(R.id.select_book_to_remove__by_ID_spinner);
         removeBookButton = (Button)findViewById(R.id.remove_book_button);
         try {
@@ -63,7 +66,7 @@ public class RemoveBook extends AppCompatActivity {
             public void onClick(View v) {
                 try {
                     idToRemove = Long.valueOf(removeBookIdSpinner.getSelectedItem().toString());//getting selected id
-                    BackendFactory.getInstance().removeBook(idToRemove, user.getNumID(), user.getPrivilege());//removing selected book
+                    backend.removeBook(idToRemove, user.getNumID(), user.getPrivilege());//removing selected book
                     Toast.makeText(RemoveBook.this, "the selected book was removed successfully:\n" , Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(RemoveBook.this, SupplierActivity.class);//going to previous activity with this supplier details
                     intent.putExtra(ConstValue.SUPPLIER_KEY, user);

@@ -105,9 +105,9 @@ public class ManagerActivity extends AppCompatActivity
                 intent = new Intent(ManagerActivity.this, UpdateSupplier.class);
                 break;
             case R.id.listOfSuppliers:
-                intent = new Intent(ManagerActivity.this, ListOfPerson.class);
                 try {
                     ArrayList<Supplier> suppliers = BackendFactory.getInstance().getSupplierList();
+                    intent = new Intent(ManagerActivity.this, ListOfPerson.class);
                     intent.putExtra(ConstValue.PERSON_KEY, suppliers);
                 }catch (Exception e){
                     //print the exception in a toast view
@@ -121,9 +121,9 @@ public class ManagerActivity extends AppCompatActivity
                 intent = new Intent(ManagerActivity.this, UpdateCustomer.class);
                 break;
             case R.id.listOfCustomers:
-                intent = new Intent(ManagerActivity.this, ListOfPerson.class);
                 try {
                     ArrayList<Customer> customers = BackendFactory.getInstance().getCustomerList(user.getPrivilege());
+                    intent = new Intent(ManagerActivity.this, ListOfPerson.class);
                     intent.putExtra(ConstValue.PERSON_KEY, customers);
                 }catch (Exception e){
                     //print the exception in a toast view

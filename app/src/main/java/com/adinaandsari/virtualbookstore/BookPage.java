@@ -169,7 +169,7 @@ public class BookPage extends AppCompatActivity {
                             dialog.dismiss();
                         }
                     }
-                });
+               });
                 dialog.show();
             }
         });

@@ -95,6 +95,9 @@ public class SupplierActivity extends AppCompatActivity
             case R.id.updateBook:
                 intent = new Intent(SupplierActivity.this, UpdateBook.class);
                 break;
+            case R.id.listOfAllBook:
+                intent = new Intent(SupplierActivity.this, BookListForSupplier.class);
+                break;
             default:
                 break;
         }
