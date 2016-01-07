@@ -182,7 +182,9 @@
     <string name="title_activity_remove_opinion">RemoveOpinion</string>
     <string name="show_opinions_list">Show Opinions List</string>
     <string name="press_opinion_remove">Press on the opinion to remove:</string>
-    <string name="add_opinion">Add Opinion</string>
+    <string name="add_opinion"> Add Opinion </string>
     <string name="view_opinion">View Opinions</string>
     <string name="book_id">Book ID:</string>
+    <string name="title_activity_opinion_list">OpinionList</string>
+    <string name="enter_yout_opinion">enter your opinion on the book</string>
 </resources>

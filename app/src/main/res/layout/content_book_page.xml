@@ -51,19 +51,20 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/name_text_view"
+            android:layout_gravity="left"
             android:id="@+id/book_name_text_view_book_page" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="3"
+            android:layout_gravity="center"
             android:id="@+id/the_book_name_text_view_book_page" />
         <Button
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/add_opinion"
             android:id="@+id/add_opinion_book_page"
-            android:layout_weight="2"
-            android:gravity="right"/>
+            android:layout_gravity="right"/>
     </LinearLayout>
     <LinearLayout
         android:orientation="horizontal"
@@ -75,20 +76,21 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_gravity="left"
             android:text="@string/author_book_text"
             android:id="@+id/author_text_view_book_page" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="3"
+            android:layout_gravity="center"
             android:id="@+id/the_author_text_view_book_page" />
         <Button
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/view_opinion"
             android:id="@+id/view_opinion_book_page"
-            android:layout_weight="2"
-            android:gravity="right"/>
+            android:layout_gravity="right"/>
     </LinearLayout>
     <LinearLayout
         android:orientation="horizontal"

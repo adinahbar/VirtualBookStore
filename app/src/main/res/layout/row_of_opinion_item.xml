@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f7b27d"
+    android:weightSum="3">
+    <TextView
+        android:id="@+id/opinionIdTextView_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/id_text_view"
+        android:layout_weight="1"
+        android:layout_gravity="center" />
+    <TextView
+        android:id="@+id/theOpinionTextView_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/opinions_text"
+        android:layout_weight="1"
+        android:layout_gravity="center" />
+    <TextView
+        android:id="@+id/opinionRateTextView_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/rate"
+        android:layout_weight="1"
+        android:layout_gravity="center" />
+</LinearLayout>

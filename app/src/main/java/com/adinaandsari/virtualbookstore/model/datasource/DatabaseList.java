@@ -425,7 +425,7 @@ public class DatabaseList implements Backend {
      */
     @Override
     public void removeOpinion(long opinionID,Privilege privilege) throws Exception {
-        if (privilege != Privilege.CUSTOMER) //check that only the customer can remove an opinion
+        if (privilege != Privilege.MANAGER) //check that only the manager can remove an opinion
             throw new Exception("ERROR: you aren't privileged to remove an opinion");
         //try to get the opinion and delete it
         Opinion opinionToDelete = findOpinionByID(opinionID);
@@ -733,7 +733,14 @@ public class DatabaseList implements Backend {
                 rateSumOfBook += op.getRate();
             }
         }
-        book.setRateAVR(rateSumOfBook / count);
+        if (count == 0)//there are no opinions
+        {
+            book.setRateAVR(0);
+        }
+        else
+        {
+            book.setRateAVR(Math.round(rateSumOfBook / count));
+        }
         //update the book
         updateBook(book,getManger().getNumID() , Privilege.MANAGER);
     }

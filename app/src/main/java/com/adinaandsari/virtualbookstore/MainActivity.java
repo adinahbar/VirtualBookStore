@@ -14,6 +14,7 @@ import com.adinaandsari.virtualbookstore.entities.Customer;
 import com.adinaandsari.virtualbookstore.entities.Gender;
 import com.adinaandsari.virtualbookstore.entities.Language;
 import com.adinaandsari.virtualbookstore.entities.Manager;
+import com.adinaandsari.virtualbookstore.entities.Opinion;
 import com.adinaandsari.virtualbookstore.entities.Order;
 import com.adinaandsari.virtualbookstore.entities.Privilege;
 import com.adinaandsari.virtualbookstore.entities.Status;
@@ -43,13 +44,16 @@ public class MainActivity extends AppCompatActivity {
             Book bookToAdd = new Book("ab","aa", Category.ARTS,new Date(1995,7,8), Language.FRENCH,"aa","very nice");
             Book bookToAdd2 = new Book("ab","aa", Category.ARTS,new Date(1995,7,8), Language.FRENCH,"aa","very nice");
             Book bookToAdd3 = new Book("ab","aa", Category.ARTS,new Date(1995,7,8), Language.FRENCH,"aa","very nice");
-
+            Opinion opinion =new Opinion(5,"yofi",bookToAdd.getBookID());
             backendFactory.addBook(bookToAdd, 456789123,456789123 , Privilege.SUPPLIER,
                     5, 99);
             backendFactory.addBook(bookToAdd2, 456789123,456789123 , Privilege.SUPPLIER,
                     5, 99);
             backendFactory.addBook(bookToAdd3, 456789123,456789123 , Privilege.SUPPLIER,
                     5, 99);
+            Opinion opinion2 =new Opinion(5,"yofi2",bookToAdd2.getBookID());
+            backendFactory.addOpinion(opinion,Privilege.CUSTOMER);
+            backendFactory.addOpinion(opinion2,Privilege.CUSTOMER);
             Order order = new Order(bookToAdd.getBookID(),supplierToAdd.getNumID(),customerToAdd.getNumID(),1);
             order.setPaid(false);
             backendFactory.addOrder(order,Privilege.MANAGER);

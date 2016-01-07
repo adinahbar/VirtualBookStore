@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.adinaandsari.virtualbookstore.entities.Customer;
@@ -48,6 +49,12 @@ public class ManagerActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_manager);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //the name text view
+        TextView name = (TextView) findViewById(R.id.name_of_manager_textView_manager_activity);
+        String text = "Dear " + user.getName() +
+                "\nYou are invited to control all of your customers and suppliers!";
+        name.setText(text);
     }
 
     @Override
@@ -124,7 +131,7 @@ public class ManagerActivity extends AppCompatActivity
                 }
                 break;
             case R.id.removeOpinion:
-                //intent = new Intent(ManagerActivity.this, .class);
+                intent = new Intent(ManagerActivity.this, RemoveOpinion.class);
                 break;
             case R.id.updateManager:
                 intent = new Intent(ManagerActivity.this, UpdateManager.class);

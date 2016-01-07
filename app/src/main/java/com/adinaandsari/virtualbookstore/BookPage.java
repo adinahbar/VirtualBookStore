@@ -3,26 +3,27 @@ package com.adinaandsari.virtualbookstore;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.adinaandsari.virtualbookstore.entities.Book;
 import com.adinaandsari.virtualbookstore.entities.Customer;
+import com.adinaandsari.virtualbookstore.entities.Opinion;
 import com.adinaandsari.virtualbookstore.entities.Order;
 import com.adinaandsari.virtualbookstore.entities.Privilege;
 import com.adinaandsari.virtualbookstore.entities.Supplier;
 import com.adinaandsari.virtualbookstore.entities.SupplierAndBook;
+import com.adinaandsari.virtualbookstore.model.backend.Backend;
 import com.adinaandsari.virtualbookstore.model.datasource.BackendFactory;
 
 import java.text.DateFormat;
@@ -38,6 +39,7 @@ public class BookPage extends AppCompatActivity {
     EditText editTextNumOfPages;
     private Spinner suppliersSpinner ;
     private ImageButton addToCartButton ;
+    private Button addOpinionButton,viewOpinionsButton;
     private List<BookItemForList> supplierItemForSpinner = new ArrayList<>();
     private BookItemForList selectedFromSpinner;
     private Supplier selectedSupplier;
@@ -62,7 +64,8 @@ public class BookPage extends AppCompatActivity {
         suppliersSpinner = (Spinner)findViewById(R.id.suppliers_spinner_book_page);
         addToCartButton = (ImageButton)findViewById(R.id.add_to_cart_button);
         editTextNumOfPages=(EditText)findViewById(R.id.num_of_copies_edit_text_book_page);
-
+        addOpinionButton = (Button)findViewById(R.id.add_opinion_book_page);
+        viewOpinionsButton = (Button)findViewById(R.id.view_opinion_book_page);
     }
 
     //function to show to book's detail
@@ -120,6 +123,57 @@ public class BookPage extends AppCompatActivity {
        }
         );
 
+        //view opinions list
+        viewOpinionsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(BookPage.this, OpinionList.class);//going to previous activity with this supplier details
+                intent.putExtra(ConstValue.CUSTOMER_KEY, customer);
+                intent.putExtra(ConstValue.BOOK_KEY, book);
+                startActivity(intent);
+            }
+        });
+
+        //add an opinion to the book
+        addOpinionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog dialog = new Dialog(BookPage.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.add_opinion_dialog);
+                dialog.setTitle("Enter your opinion on this book");
+                TextView bookDetail = (TextView)dialog.findViewById(R.id.book_id_of_the_opinion_opinion_dialog);
+                final EditText theOpinion = (EditText)dialog.findViewById(R.id.opinion_editText_opinion_dialog);
+                final RatingBar rate = (RatingBar) dialog.findViewById(R.id.ratingBar_of_the_opinion_opinion_dialog);
+                String text = String.valueOf(book.getBookID());
+                text += "\t" + book.getBookName();
+                bookDetail.setText(text);
+                rate.setRating(3);
+
+                Button addOpinionDialog = (Button)dialog.findViewById(R.id.add_opinion_button_opinion_dialog);
+                addOpinionDialog.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            int rateForOpinion = (int)Math.round(rate.getRating());
+                            String opinionText = theOpinion.getText().toString();
+                            Opinion newOpinion = new Opinion(rateForOpinion, opinionText, book.getBookID());
+                            Backend backend = BackendFactory.getInstance();
+                            backend.addOpinion(newOpinion,customer.getPrivilege());
+                            textViewOFRate.setText(String.valueOf(backend.findBookByID(book.getBookID()).getRateAVR()));
+                            dialog.dismiss();
+                        }catch (Exception e)
+                        {
+                            //print the exception in a toast view
+                            Toast.makeText(BookPage.this,  e.getMessage(), Toast.LENGTH_LONG).show();
+                            dialog.dismiss();
+                        }
+                    }
+                });
+                dialog.show();
+            }
+        });
+        //add to cart button
         addToCartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -152,7 +206,7 @@ public class BookPage extends AppCompatActivity {
                 catch (Exception e)
                 {
                     //print the exception in a toast view
-                    Toast.makeText(BookPage.this, "Failed to show the book's detail:\n" + e.getMessage().toString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(BookPage.this, "Failed to show the book's detail:\n" + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
 
             }

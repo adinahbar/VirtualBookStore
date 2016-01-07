@@ -1,5 +1,7 @@
 package com.adinaandsari.virtualbookstore;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 import com.adinaandsari.virtualbookstore.entities.Book;
 import com.adinaandsari.virtualbookstore.entities.Manager;
 import com.adinaandsari.virtualbookstore.entities.Opinion;
+import com.adinaandsari.virtualbookstore.entities.Privilege;
 import com.adinaandsari.virtualbookstore.model.backend.Backend;
 import com.adinaandsari.virtualbookstore.model.datasource.BackendFactory;
 
@@ -46,7 +49,7 @@ public class RemoveOpinion extends AppCompatActivity {
         listView.setEmptyView(emptyView);
     }
 
-    //function to set the list of orders
+    //function to set the list of opinion
     void initItemByListView(int bookIDOfOpinion)throws Exception
     {
         setListViewAsEmpty();
@@ -54,33 +57,29 @@ public class RemoveOpinion extends AppCompatActivity {
         Backend backend = BackendFactory.getInstance();
         opinions = backend.getOpinionListOfBook(bookID);
         opinionsItemForList = new ArrayList<>();
-        /*
         for (Opinion o : opinions) {
-            orderItemForLists.add(new OrderItemForList(o.getOrderID(), o.getTotalPrice(),name,o.getNumOfCopies() ));
+            opinionsItemForList.add(new OpinionItemForList(o.getYourOpinion(),o.getRate(),o.getOpinionID()));
         }
-        ArrayAdapter<OrderItemForList> adapter = new ArrayAdapter<OrderItemForList>(this,
-                R.layout.row_of_order_item,orderItemForLists)
+        ArrayAdapter<OpinionItemForList> adapter = new ArrayAdapter<OpinionItemForList>(this,
+                R.layout.row_of_opinion_item,opinionsItemForList)
         {
             @Override
             public View getView(int position,View convertView, ViewGroup parent)
             {
                 if (convertView == null)
                 {
-                    convertView = View.inflate(CustomerCart.this, R.layout.row_of_order_item,null);
+                    convertView = View.inflate(RemoveOpinion.this, R.layout.row_of_opinion_item,null);
                 }
-                TextView orderID = (TextView)convertView.findViewById(R.id.orderIdTextView_row);
-                TextView bookName = (TextView)convertView.findViewById(R.id.bookNameOfOrderTextView_row);
-                TextView price = (TextView)convertView.findViewById(R.id.orderPriceTextView_row);
-                TextView numOfCopies = (TextView)convertView.findViewById(R.id.bookNumOfCopiesTextView_row);
-                orderID.setText(String.valueOf(orderItemForLists.get(position).getOrderId()));
-                bookName.setText(orderItemForLists.get(position).getBookName());
-                price.setText(String.valueOf(orderItemForLists.get(position).getPrice()));
-                numOfCopies.setText(String.valueOf(orderItemForLists.get(position).getNumOfCopies()));
+                TextView opinionID = (TextView)convertView.findViewById(R.id.opinionIdTextView_row);
+                TextView opinionRate = (TextView)convertView.findViewById(R.id.opinionRateTextView_row);
+                TextView theOpinion = (TextView)convertView.findViewById(R.id.theOpinionTextView_row);
+                opinionID.setText(String.valueOf(opinionsItemForList.get(position).getOpinionId()));
+                theOpinion.setText(opinionsItemForList.get(position).getTheOpinion());
+                opinionRate.setText(String.valueOf(opinionsItemForList.get(position).getRate()));
                 return convertView;
             }
         };
         listView.setAdapter(adapter);
-        */
     }
 
     @Override
@@ -132,6 +131,37 @@ public class RemoveOpinion extends AppCompatActivity {
         {
             Toast.makeText(RemoveOpinion.this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
+
+        //when press on the opinion to remove
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> adapterView, View item, int position, long id) {
+                final OpinionItemForList opinionToRemove = (OpinionItemForList) adapterView.getItemAtPosition(position);
+                new AlertDialog.Builder(RemoveOpinion.this)
+                        .setTitle("Remove opinion")
+                        .setMessage("Are you sure you want to remove this opinion? ")
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                try {
+                                    final Backend backend = BackendFactory.getInstance();
+                                    final Opinion opinion = backend.findOpinionByID(opinionToRemove.opinionId);
+                                    backend.removeOpinion(opinion.getOpinionID(),Privilege.MANAGER);
+                                    //restart the activity
+                                    Intent intent = new Intent(RemoveOpinion.this, ManagerActivity.class);
+                                    intent.putExtra(ConstValue.MANAGER_KEY, user);//add the specific manager
+                                    startActivity(intent);
+
+                                } catch (Exception e) {
+                                    //print the exception in a toast view
+                                    Toast.makeText(RemoveOpinion.this, "Error:\n" + e.getMessage().toString(), Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        })
+                        .create()
+                        .show();
+            }
+        });
 
     }
 
