@@ -72,7 +72,7 @@ public class DatabaseList implements Backend {
                 boolean flag = false;
                 for (Order o :orders)
                 {
-                    if (o.getOrderID()== userID && o.getBookID()==bookID)
+                    if (o.getOrderID()== userID && o.getBookID()==bookID && o.isPaid()==false)
                     {
                         throw new Exception("ERROR: you can not remove this book because it is in orders of customer");
                     }
@@ -88,7 +88,14 @@ public class DatabaseList implements Backend {
                 }
                 if (!flag)//the supplier try to delete a book of another supplier
                     throw new Exception("ERROR: you aren't privileged to delete others supplier's book");
-                books.remove(bookToDelete);
+                flag = false;
+                for (SupplierAndBook supplierAndBook : supplierAndBooks)
+                {
+                    if (supplierAndBook.getBookID() == bookID) //there is more suppliers that provide this book
+                        flag = true;
+                }
+                if (!flag)
+                    books.remove(bookToDelete);
                 break;
             case MANAGER:
                 Book bookForDelete=findBookByID(bookID);//get the book
