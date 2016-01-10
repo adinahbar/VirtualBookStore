@@ -161,6 +161,11 @@ public class DatabaseList implements Backend {
         return listToReturn;
     }
 
+    @Override
+    public void setBooksList() {
+
+    }
+
     //supplier CRUD functions
     /**
      * function to add a supplier
@@ -243,6 +248,11 @@ public class DatabaseList implements Backend {
         for (Supplier supplierItem : suppliers)
             listToReturn.add(new Supplier(supplierItem));
         return listToReturn;
+    }
+
+    @Override
+    public void setSupplierList() {
+
     }
 
     //order CRUD functions
@@ -351,6 +361,11 @@ public class DatabaseList implements Backend {
         return listToReturn;
     }
 
+    @Override
+    public void setOrderList() {
+
+    }
+
     //customer CRUD functions
     /**
      * function to add a customer
@@ -414,6 +429,11 @@ public class DatabaseList implements Backend {
         for (Customer customerItem : customers)
             listToReturn.add(new Customer(customerItem));
         return listToReturn;
+    }
+
+    @Override
+    public void setCustomerList() {
+
     }
 
     //opinion CRUD functions
@@ -485,6 +505,11 @@ public class DatabaseList implements Backend {
         return listToReturn;
     }
 
+    @Override
+    public void setOpinionList() {
+
+    }
+
     //manger CRUD functions
     /**
      * function to add a manger for the store
@@ -543,7 +568,16 @@ public class DatabaseList implements Backend {
         return (new Manager(managerOfTheStore)); // to prevent aliasing
     }
 
+    @Override
+    public void setManager() {
+
+    }
+
     //functions to find object
+    @Override
+    public void setSupplierAndBookList() {
+
+    }
     /**
      * find a Supplier by a given ID
      * @param id number of the Supplier
@@ -769,8 +803,7 @@ public class DatabaseList implements Backend {
     public int getNumOfCopiesOfBook (long bookID)throws Exception
     {
         int numOfBookCopies=0;
-        findBookByID(bookID);//
-
+        findBookByID(bookID);
         for (SupplierAndBook s:supplierAndBooks)//loop to go on supplier and book list
         {
             if (s.getBookID() == bookID)

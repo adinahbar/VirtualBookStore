@@ -9,6 +9,7 @@ import java.util.Date;
  * Created by adina_000 on 09-Nov-15.
  */
 public interface Backend {
+
     /**
      * book functions
      */
@@ -16,6 +17,7 @@ public interface Backend {
     public void removeBook(long bookID, long userID, Privilege privilege) throws Exception;
     public void updateBook(Book book, long userID, Privilege privilege) throws Exception;
     public ArrayList<Book> getBookList() throws Exception;
+    public void setBooksList();
     public Book findBookByID(long id) throws Exception;
 
     /**
@@ -25,6 +27,7 @@ public interface Backend {
     public void removeSupplier(long supplierID, Privilege privilege) throws Exception;
     public void updateSupplier(Supplier supplier, Privilege privilege) throws Exception;
     public ArrayList<Supplier> getSupplierList() throws Exception;
+    public void setSupplierList();
     public Supplier findSupplierByID(long id) throws Exception;
 
     /**
@@ -34,6 +37,7 @@ public interface Backend {
     public void removeOrder(long orderID, Privilege privilege) throws Exception;
     public void updateOrder(Order order, Privilege privilege) throws Exception;
     public ArrayList<Order> getOrderList() throws Exception;
+    public void setOrderList();
     public Order findOrderByID(long orderID)throws Exception;
 
     /**
@@ -43,6 +47,7 @@ public interface Backend {
     public void removeCustomer(long customerID, Privilege privilege) throws Exception;
     public void updateCustomer(Customer customer, Privilege privilege) throws Exception;
     public ArrayList<Customer> getCustomerList(Privilege privilege) throws Exception;
+    public void setCustomerList();
     public Customer findCustomerByID(long customerID)throws Exception;
 
     /**
@@ -52,6 +57,7 @@ public interface Backend {
     public void removeOpinion(long opinionID, Privilege privilege) throws Exception;
     public void updateOpinion(Opinion opinion, Privilege privilege) throws Exception;
     public ArrayList<Opinion> getOpinionListOfBook(long bookID) throws Exception;
+    public void setOpinionList();
     public Opinion findOpinionByID(long opinionID)throws Exception;
     /**
      * manger functions
@@ -60,10 +66,12 @@ public interface Backend {
     public void removeManger(long mangerID, Privilege privilege) throws Exception;
     public void updateManger(Manager manager, Privilege privilege) throws Exception;
     public Manager getManger() throws Exception;
+    public void setManager();
 
     /**
      * other functions
      */
+    public void setSupplierAndBookList();
     public ArrayList<Book> bookListSortedByCategory(Category category)throws Exception;
     public ArrayList<Book> bookListSortedByAuthors(String authorsName)throws Exception;
     public ArrayList<Book> bookListSortedByDate(Date start, Date end)throws Exception;

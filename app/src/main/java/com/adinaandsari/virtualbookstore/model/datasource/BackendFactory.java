@@ -8,11 +8,24 @@ import com.adinaandsari.virtualbookstore.model.backend.Backend;
 public class BackendFactory {
     static Backend instance = null;
 
+    public static String mode = "mysql";
+
     public final static Backend getInstance()
     {
-        if (instance == null)
-              instance = new com.adinaandsari.virtualbookstore.model.datasource.DatabaseList();
-        return instance;
+        if (mode == "lists")
+        {
+            if (instance == null)
+                instance = new com.adinaandsari.virtualbookstore.model.datasource.DatabaseList();
+            return instance;
+        }
+
+        if (mode == "mysql")
+        {
+            if (instance == null)
+                instance = new com.adinaandsari.virtualbookstore.model.datasource.DatabaseMySQL();
+            return instance;
+        }
+        else return null;
 
     }
 }

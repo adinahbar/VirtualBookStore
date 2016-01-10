@@ -21,6 +21,7 @@ import com.adinaandsari.virtualbookstore.entities.Status;
 import com.adinaandsari.virtualbookstore.entities.Supplier;
 import com.adinaandsari.virtualbookstore.entities.SupplierType;
 import com.adinaandsari.virtualbookstore.model.backend.Backend;
+import com.adinaandsari.virtualbookstore.model.datasource.BackendFactory;
 
 import java.util.Date;
 
@@ -32,7 +33,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         try{
-            Backend backendFactory = com.adinaandsari.virtualbookstore.model.datasource.BackendFactory.getInstance();
+            Backend backendFactory = BackendFactory.getInstance();
+            backendFactory.setBooksList();
             Manager manager = new Manager(123456789, "manager", "aa", "00", "@", Gender.MALE,5);
             backendFactory.addManger(manager, Privilege.MANAGER);
             Customer customerToAdd = new Customer(987654321,"customer", "aa", "00", "@", Gender.MALE,
