@@ -35,11 +35,17 @@ public class MainActivity extends AppCompatActivity {
         try{
             Backend backendFactory = BackendFactory.getInstance();
             backendFactory.setBooksList();
+            backendFactory.setSupplierList();
+            backendFactory.setManager();
+            backendFactory.setOpinionList();
+            //backendFactory.setSupplierAndBookList();
+            backendFactory.setCustomerList();
+            backendFactory.setOrderList();
             Manager manager = new Manager(123456789, "manager", "aa", "00", "@", Gender.MALE,5);
-            backendFactory.addManger(manager, Privilege.MANAGER);
+            //backendFactory.addManger(manager, Privilege.MANAGER);
             Customer customerToAdd = new Customer(987654321,"customer", "aa", "00", "@", Gender.MALE,
                     new Date(1995,7,8), "", Status.MARRIED);
-            backendFactory.addCustomer(customerToAdd, Privilege.MANAGER);
+            //backendFactory.addCustomer(customerToAdd, Privilege.MANAGER);
             Supplier supplierToAdd = new Supplier(456789123,"supplier", "aa", "00", "@", Gender.MALE,
                     "555", "55", SupplierType.WRITER);
             backendFactory.addSupplier(supplierToAdd, Privilege.MANAGER);
@@ -47,18 +53,18 @@ public class MainActivity extends AppCompatActivity {
             Book bookToAdd2 = new Book("ab","aa", Category.ARTS,new Date(1995,7,8), Language.FRENCH,"aa","very nice");
             Book bookToAdd3 = new Book("ab","aa", Category.ARTS,new Date(1995,7,8), Language.FRENCH,"aa","very nice");
             Opinion opinion =new Opinion(5,"yofi",bookToAdd.getBookID());
-            backendFactory.addBook(bookToAdd, 456789123,456789123 , Privilege.SUPPLIER,
-                    5, 99);
-            backendFactory.addBook(bookToAdd2, 456789123,456789123 , Privilege.SUPPLIER,
-                    5, 99);
-            backendFactory.addBook(bookToAdd3, 456789123,456789123 , Privilege.SUPPLIER,
-                    5, 99);
+            //backendFactory.addBook(bookToAdd, 456789123,456789123 , Privilege.SUPPLIER,
+            //        5, 99);
+            //backendFactory.addBook(bookToAdd2, 456789123,456789123 , Privilege.SUPPLIER,
+            //        5, 99);
+           // backendFactory.addBook(bookToAdd3, 456789123,456789123 , Privilege.SUPPLIER,
+             //       5, 99);
             Opinion opinion2 =new Opinion(5,"yofi2",bookToAdd2.getBookID());
-            backendFactory.addOpinion(opinion,Privilege.CUSTOMER);
-            backendFactory.addOpinion(opinion2,Privilege.CUSTOMER);
+            //backendFactory.addOpinion(opinion,Privilege.CUSTOMER);
+            //backendFactory.addOpinion(opinion2,Privilege.CUSTOMER);
             Order order = new Order(bookToAdd.getBookID(),supplierToAdd.getNumID(),customerToAdd.getNumID(),1);
             order.setPaid(false);
-            backendFactory.addOrder(order,Privilege.MANAGER);
+            //backendFactory.addOrder(order,Privilege.MANAGER);
         }
         catch (Exception e)
         {
