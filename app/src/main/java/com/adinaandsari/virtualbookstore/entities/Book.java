@@ -119,6 +119,10 @@ public class Book implements Serializable {
         this.rateAVR = rate;
     }
 
+    public static void setBookIDCounter(int bookIDCounter) {
+        Book.bookIDCounter = bookIDCounter;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == this)

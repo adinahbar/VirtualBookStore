@@ -65,6 +65,10 @@ public class Opinion implements Serializable {
         this.opinionID = opinionID;
     }
 
+    public static void setOpinionIDCounter(int opinionIDCounter) {
+        Opinion.opinionIDCounter = opinionIDCounter;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == this)

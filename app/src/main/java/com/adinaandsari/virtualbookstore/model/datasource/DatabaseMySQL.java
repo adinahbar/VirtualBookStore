@@ -12,7 +12,6 @@ import com.adinaandsari.virtualbookstore.entities.Manager;
 import com.adinaandsari.virtualbookstore.entities.Opinion;
 import com.adinaandsari.virtualbookstore.entities.Order;
 import com.adinaandsari.virtualbookstore.entities.Privilege;
-import com.adinaandsari.virtualbookstore.entities.Status;
 import com.adinaandsari.virtualbookstore.entities.Supplier;
 import com.adinaandsari.virtualbookstore.entities.SupplierAndBook;
 import com.adinaandsari.virtualbookstore.entities.SupplierType;
@@ -31,6 +30,7 @@ import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -56,23 +56,17 @@ public class DatabaseMySQL implements Backend{
     private static String GET(String url) throws Exception {
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-        Log.d("TEST", "reach the connection");
         con.setRequestMethod("GET");
-        Log.d("TEST", "reach the setRequestMethod");
         if (con.getResponseCode() == HttpURLConnection.HTTP_OK) { // success
-            Log.d("TEST", "enter the if");
             BufferedReader in = new BufferedReader(new InputStreamReader(
                     con.getInputStream()));
-            Log.d("TEST", "reach the BufferedReader");
             String inputLine;
             StringBuffer response = new StringBuffer();
             while ((inputLine = in.readLine()) != null) {
                 response.append(inputLine);
             }
-            Log.d("TEST", "reach the BufferedReader");
             in.close();
             // print result
-            Log.d("TEST", "reach the response.toString()" + response.toString());
             return response.toString();
         } else {
             return "";
@@ -144,6 +138,35 @@ public class DatabaseMySQL implements Backend{
         }
     }
     /**
+     * function to remove the supplier and book
+     * @param supplierID
+     * @param bookID
+     */
+    private void removeSupplierAndBook(final long supplierID,final long bookID) {
+
+        try{
+            new AsyncTask< Void,Void,Void>() {
+                @SafeVarargs
+                @Override
+                protected final Void doInBackground(Void... params) {
+                    Map<String,Object> _params = new LinkedHashMap<>();
+                    _params.put("book_id",bookID);
+                    _params.put("supplier_id",supplierID);
+                    try {
+                        POST(web_url + "removeSupplierAndBook.php", _params);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            }.execute();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+    /**
      * function to get all the supplierandbooks of a specific book
      * @param bookID
      * @return supplier list
@@ -168,17 +191,81 @@ public class DatabaseMySQL implements Backend{
      * function to update a supplier and book (num of copies and\or price)
      * @param supplierAndBook for update
      */
-    private boolean updateSupplierAndBook (SupplierAndBook supplierAndBook)///////////////////////////////
+    private boolean updateSupplierAndBook (final SupplierAndBook supplierAndBook)
     {
         for (SupplierAndBook s : supplierAndBooks)
         {
             if (s.getBookID() == supplierAndBook.getBookID() && s.getSupplierID()== supplierAndBook.getSupplierID()){
                 supplierAndBooks.remove(s);
                 supplierAndBooks.add(supplierAndBook);
+                try{
+                    new AsyncTask< Void,Void,Void>() {
+                        @SafeVarargs
+                        @Override
+                        protected final Void doInBackground(Void... params) {
+                            Map<String,Object> _params = new LinkedHashMap<>();
+                            _params.put("book_id", supplierAndBook.getBookID());
+                            _params.put("supplier_id", supplierAndBook.getSupplierID());
+                            _params.put("num_of_copies", supplierAndBook.getNumOfCopies());
+                            _params.put("price",supplierAndBook.getPrice());
+                            try {
+                                POST(web_url + "updateSupplierAndBook.php", _params);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            return null;
+                        }
+                    }.execute();
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
                 return true;
             }
         }
         return false; //problem with the updating
+    }
+    /**
+     * set supplier and book list
+     */
+    @Override
+    public void setSupplierAndBookList() {
+        supplierAndBooks.clear();
+        try {
+            new AsyncTask<Void, Void,  ArrayList<SupplierAndBook>>() {
+                @Override
+                protected  ArrayList<SupplierAndBook> doInBackground(Void... voids) {
+                    try {
+                        SupplierAndBook tempSupplierAndBook;
+                        JSONArray suppliersAndBookArray = new JSONObject(GET(web_url + "allSupplierAndBook.php")).getJSONArray("supplier_and_books");
+                        for (int i = 0; i < suppliersAndBookArray.length(); i++) {
+                            tempSupplierAndBook = new SupplierAndBook();
+                            tempSupplierAndBook.setBookID(suppliersAndBookArray.getJSONObject(i).getInt("book_id"));
+                            tempSupplierAndBook.setNumOfCopies(suppliersAndBookArray.getJSONObject(i).getInt("num_of_copies"));
+                            tempSupplierAndBook.setSupplierID((long) suppliersAndBookArray.getJSONObject(i).getInt("supplier_id"));
+                            tempSupplierAndBook.setPrice((float)suppliersAndBookArray.getJSONObject(i).getInt("price"));
+                            supplierAndBooks.add(tempSupplierAndBook);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return supplierAndBooks;
+                }
+                @Override
+                protected void onPreExecute() {
+                }
+
+                @Override
+                protected void onPostExecute(ArrayList<SupplierAndBook> suppliers) {
+
+                }
+            }.execute().get();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     //book CRUD functions
@@ -213,7 +300,6 @@ public class DatabaseMySQL implements Backend{
             //the book doesn't exist
             //add the book and create the supplier and book of it
             books.add(book);
-            addSupplierAndBook(new SupplierAndBook(book.getBookID(), numOfCopies, supplierID, price));
             try{
                 new AsyncTask< Void,Void,Void>() {
                     @SafeVarargs
@@ -224,10 +310,15 @@ public class DatabaseMySQL implements Backend{
                         _params.put("name", book.getBookName());
                         _params.put("auther", book.getAuthor());
                         _params.put("publisher",book.getPublisher());
-                        _params.put("date_published", book.getDatePublished());
-                        _params.put("books_category",book.getBooksCategory());
-                        _params.put("name", book.getSummary());
-                        _params.put("language", book.getLanguage());
+                        Calendar cal;
+                        DateFormat format=new SimpleDateFormat("yyyy-mm-dd");
+                        format.format(book.getDatePublished());
+                        cal=format.getCalendar();
+                        java.sql.Date sqlDate = new java.sql.Date(cal.getTimeInMillis());
+                        _params.put("date_published",sqlDate );
+                        _params.put("books_category",book.getBooksCategory().ordinal());
+                        _params.put("summary", book.getSummary());
+                        _params.put("language", book.getLanguage().ordinal());
                         _params.put("rate_avr", book.getRateAVR());
                         try {
                             POST(web_url + "addBook.php", _params);
@@ -242,16 +333,161 @@ public class DatabaseMySQL implements Backend{
             {
                 e.printStackTrace();
             }
-        }
-
+        addSupplierAndBook(new SupplierAndBook(book.getBookID(), numOfCopies, supplierID, price));
+    }
+    /**
+     * function to remove a book
+     * @param bookID of the book
+     * @param privilege of the user
+     * @throws Exception
+     */
     @Override
     public void removeBook(long bookID, long userID, Privilege privilege) throws Exception {
-
+        switch (privilege)
+        {
+            case CUSTOMER:
+                //only the manager or the supplier can remove a book
+                throw new Exception("ERROR: you aren't privileged to delete a book");
+            case SUPPLIER:
+                Book bookToDelete=findBookByID(bookID);//get the book
+                boolean flag = false;
+                for (Order o :orders)
+                {
+                    if (o.getOrderID()== userID && o.getBookID()==bookID && o.isPaid()==false)
+                    {
+                        throw new Exception("ERROR: you can not remove this book because it is in orders of customer");
+                    }
+                }
+                for (SupplierAndBook supplierAndBookItem : supplierAndBooks) //delete the supplier and book with this book
+                {
+                    if (supplierAndBookItem.getBookID() == bookID && supplierAndBookItem.getSupplierID() == userID ) //check if the supplier delete is own books
+                    {
+                        supplierAndBooks.remove(supplierAndBookItem);
+                        removeSupplierAndBook(supplierAndBookItem.getSupplierID(),supplierAndBookItem.getBookID());
+                        flag = true;
+                        break;
+                    }
+                }
+                if (!flag)//the supplier try to delete a book of another supplier
+                    throw new Exception("ERROR: you aren't privileged to delete others supplier's book");
+                flag = false;
+                for (SupplierAndBook supplierAndBook : supplierAndBooks)
+                {
+                    if (supplierAndBook.getBookID() == bookID) //there is more suppliers that provide this book
+                        flag = true;
+                }
+                if (!flag) {
+                    books.remove(bookToDelete);
+                    deleteBook(bookToDelete.getBookID());
+                }
+                break;
+            case MANAGER:
+                Book bookForDelete=findBookByID(bookID);//get the book
+                for (SupplierAndBook supplierAndBookItem : supplierAndBooks) //delete the supplier and book with this book
+                {
+                    if (supplierAndBookItem.getBookID() == bookID)
+                    {
+                        supplierAndBooks.remove(supplierAndBookItem);
+                        removeSupplierAndBook(supplierAndBookItem.getSupplierID(),supplierAndBookItem.getBookID());
+                    }
+                }
+                books.remove(bookForDelete);
+                deleteBook(bookForDelete.getBookID());
+                break;
+        }
     }
-
+    /**
+     * function to delete the book from the database
+     * @param bookID
+     * @throws Exception
+     */
+    public void deleteBook(final long bookID) throws Exception {
+        try{
+            new AsyncTask< Void,Void,Void>() {
+                @SafeVarargs
+                @Override
+                protected final Void doInBackground(Void... params) {
+                    Map<String,Object> _params = new LinkedHashMap<>();
+                    _params.put("book_id",bookID);
+                    try {
+                        POST(web_url + "removeBook.php", _params);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            }.execute();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * function to update a book
+     * @param book that has been updated
+     * @param privilege of the user
+     * @throws Exception
+     */
     @Override
-    public void updateBook(Book book, long userID, Privilege privilege) throws Exception {
-
+    public void updateBook(final Book book, long userID, Privilege privilege) throws Exception {
+        switch (privilege)
+        {
+            case CUSTOMER:
+                //check that only the manager or the supplier can update a book
+                throw new Exception("ERROR: you aren't privileged to add a book");
+            case SUPPLIER:
+                Book oldBook=findBookByID(book.getBookID());//get the book by its ID
+                boolean flag = false;
+                for (SupplierAndBook s : supplierAndBooks)
+                    if (s.getBookID() == book.getBookID() && s.getSupplierID() == userID)
+                        flag = true;
+                if (! flag)//the supplier try to update a book of another supplier
+                    throw new Exception("ERROR: you aren't privileged to update others supplier's book");
+                //remove the old book form the list and add the updated book to the list
+                books.remove(oldBook);
+                books.add(book);
+                break;
+            case MANAGER:
+                Book theOldBook=findBookByID(book.getBookID());//get the book by its ID
+                //remove the old book form the list and add the updated book to the list
+                books.remove(theOldBook);
+                books.add(book);
+                break;
+        }
+        try{
+            new AsyncTask< Void,Void,Void>() {
+                @SafeVarargs
+                @Override
+                protected final Void doInBackground(Void... params) {
+                    Map<String,Object> _params = new LinkedHashMap<>();
+                    _params.put("book_id",book.getBookID());
+                    _params.put("name", book.getBookName());
+                    _params.put("auther", book.getAuthor());
+                    _params.put("publisher",book.getPublisher());
+                    Calendar cal;
+                    DateFormat format=new SimpleDateFormat("yyyy-mm-dd");
+                    format.format(book.getDatePublished());
+                    cal=format.getCalendar();
+                    java.sql.Date sqlDate = new java.sql.Date(cal.getTimeInMillis());
+                    _params.put("date_published",sqlDate );
+                    _params.put("books_category",book.getBooksCategory().ordinal());
+                    _params.put("summary", book.getSummary());
+                    _params.put("language", book.getLanguage().ordinal());
+                    _params.put("rate_avr", book.getRateAVR());
+                    try {
+                        POST(web_url + "updateBook.php", _params);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            }.execute();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
     /**
      * function to get the book list
@@ -268,7 +504,6 @@ public class DatabaseMySQL implements Backend{
             listToReturn.add(new Book(bookItem));
         return listToReturn;
     }
-
     /**
      * function to set the book list from the DB
      */
@@ -281,8 +516,8 @@ public class DatabaseMySQL implements Backend{
                 protected  ArrayList<Book> doInBackground(Void... voids) {
                     try {
                         Book tempBook;
+                        int max = 0;
                         JSONArray booksArray = new JSONObject(GET(web_url + "allBooks.php")).getJSONArray("books");
-                        Log.d("TEST", "reach the array");
                         for (int i = 0; i < booksArray.length(); i++) {
                             tempBook = new Book();
                             tempBook.setBookID(booksArray.getJSONObject(i).getInt("book_id"));
@@ -298,7 +533,11 @@ public class DatabaseMySQL implements Backend{
                                     Language.values()[booksArray.getJSONObject(i).getInt("language")]);
                             tempBook.setRateAVR(booksArray.getJSONObject(i).getDouble("rate_avr"));
                             books.add(tempBook);
+                            if (max < tempBook.getBookID()) {
+                                max = tempBook.getBookID();
+                            }
                         }
+                        Book.setBookIDCounter(max+1);//set the max id for adding the next books
                     } catch (Exception e) {
                         Log.d("TEST", "Exception " + e.toString());
                         e.printStackTrace();
@@ -321,7 +560,6 @@ public class DatabaseMySQL implements Backend{
         }
 
     }
-
     /**
      * find a book by a given ID
      * @param id number of the book
@@ -361,13 +599,13 @@ public class DatabaseMySQL implements Backend{
                     _params.put("supplier_id",supplier.getNumID());
                     _params.put("name", supplier.getName());
                     _params.put("address", supplier.getAddress());
-                    _params.put("gender",supplier.getGender());
+                    _params.put("gender",supplier.getGender().ordinal());
                     _params.put("phone_number", supplier.getPhoneNumber());
                     _params.put("email_address",supplier.getEmailAddress());
-                    _params.put("privilege", supplier.getPrivilege());
+                    _params.put("privilege", supplier.getPrivilege().ordinal());
                     _params.put("customer_service_phone_number", supplier.getCustomerServicePhoneNumber());
                     _params.put("reservation_phone_number", supplier.getReservationsPhoneNumber());
-                    _params.put("type", supplier.getType());
+                    _params.put("type", supplier.getType().ordinal());
                     try {
                         POST(web_url + "addSupplier.php", _params);
                     } catch (IOException e) {
@@ -382,15 +620,109 @@ public class DatabaseMySQL implements Backend{
             e.printStackTrace();
         }
     }
-
+    /**
+     * function to remove a supplier
+     * @param supplierID of the supplier
+     * @param privilege of the user
+     * @throws Exception
+     */
     @Override
-    public void removeSupplier(long supplierID, Privilege privilege) throws Exception {
+    public void removeSupplier(final long supplierID, Privilege privilege) throws Exception {
+        if (privilege != Privilege.MANAGER) //check that only the manager can remove a supplier
+            throw new Exception("ERROR: you aren't privileged to add a supplier");
+        Supplier supplierToDelete = findSupplierByID(supplierID); //try to get the supplier
+        ArrayList<SupplierAndBook> supplierAndBooksForSupplier = new ArrayList<>();
+        for (SupplierAndBook supplierAndBookItem : supplierAndBooks)
+        {
+            if (supplierAndBookItem.getSupplierID() == supplierID)
+            {
+                //save the supplier and book items for this supplier
+                supplierAndBooksForSupplier.add(supplierAndBookItem);
+            }
+        }
+        Manager manager = getManger();
+        //for each supplier and book - check if there is more supplier to those books
+        for(SupplierAndBook s : supplierAndBooksForSupplier)
+        {
+            boolean isTheBookHasMoreSupplier = false;
+            for (SupplierAndBook supplierAndBookItem : supplierAndBooks)
+            {
+                if (supplierAndBookItem.getBookID() == s.getBookID())
+                    isTheBookHasMoreSupplier = true;
+            }
+            if(!isTheBookHasMoreSupplier) //there is no another supplier to this book
+                removeBook(s.getBookID(), manager.getNumID() ,privilege); //remove the book (and the supplier and book in this function)
 
+            else {
+                supplierAndBooks.remove(s); // remove only the supplier and book
+                removeSupplierAndBook(supplierID,s.getBookID());
+            }
+        }
+        suppliers.remove(supplierToDelete); // remove the supplier
+        try{
+            new AsyncTask< Void,Void,Void>() {
+                @SafeVarargs
+                @Override
+                protected final Void doInBackground(Void... params) {
+                    Map<String,Object> _params = new LinkedHashMap<>();
+                    _params.put("supplier_id",supplierID);
+                    try {
+                        POST(web_url + "removeSupplier.php", _params);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            }.execute();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
-
+    /**
+     * function to update the supplier
+     * @param supplier that has been updated
+     * @param privilege of the user
+     * @throws Exception
+     */
     @Override
-    public void updateSupplier(Supplier supplier, Privilege privilege) throws Exception {
-
+    public void updateSupplier(final Supplier supplier, Privilege privilege) throws Exception {
+        if (privilege != Privilege.MANAGER) //check that only the manager can update a supplier
+            throw new Exception("ERROR: you aren't privileged to add a supplier");
+        Supplier oldSupplier = findSupplierByID(supplier.getNumID()); //get the old supplier by its ID
+        //remove the old supplier and add the updated supplier
+        suppliers.remove(oldSupplier);
+        suppliers.add(supplier);
+        try{
+            new AsyncTask< Void,Void,Void>() {
+                @SafeVarargs
+                @Override
+                protected final Void doInBackground(Void... params) {
+                    Map<String,Object> _params = new LinkedHashMap<>();
+                    _params.put("supplier_id",supplier.getNumID());
+                    _params.put("name", supplier.getName());
+                    _params.put("address", supplier.getAddress());
+                    _params.put("gender",supplier.getGender().ordinal());
+                    _params.put("phone_number", supplier.getPhoneNumber());
+                    _params.put("email_address",supplier.getEmailAddress());
+                    _params.put("privilege", supplier.getPrivilege().ordinal());
+                    _params.put("customer_service_phone_number", supplier.getCustomerServicePhoneNumber());
+                    _params.put("reservation_phone_number", supplier.getReservationsPhoneNumber());
+                    _params.put("type", supplier.getType().ordinal());
+                    try {
+                        POST(web_url + "updateSupplier.php", _params);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            }.execute();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
     /**
      * function to get the supplier list
@@ -407,7 +739,9 @@ public class DatabaseMySQL implements Backend{
             listToReturn.add(new Supplier(supplierItem));
         return listToReturn;
     }
-
+    /**
+     * function to set the list
+     */
     @Override
     public void setSupplierList() {
         suppliers.clear();
@@ -454,7 +788,6 @@ public class DatabaseMySQL implements Backend{
             e.printStackTrace();
         }
     }
-
     /**
      * find a Supplier by a given ID
      * @param id number of the Supplier
@@ -470,6 +803,13 @@ public class DatabaseMySQL implements Backend{
         throw new Exception("ERROR: book doesn't exists in the system");
     }
 
+    //order CRUD functions
+    /**
+     * function to add an order
+     * @param order to add
+     * @param privilege of the user
+     * @throws Exception
+     */
     @Override
     public void addOrder(final Order order, Privilege privilege) throws Exception {
         if (privilege == Privilege.SUPPLIER) //check that the supplier can not add an order
@@ -526,15 +866,104 @@ public class DatabaseMySQL implements Backend{
             e.printStackTrace();
         }
     }
-
+    /**
+     * function to remove an order
+     * @param orderID of the order
+     * @param privilege od the user
+     * @throws Exception
+     */
     @Override
-    public void removeOrder(long orderID, Privilege privilege) throws Exception {
-
+    public void removeOrder(final long orderID, Privilege privilege) throws Exception {
+        if (privilege != Privilege.MANAGER) //check that only the manager can remove an order
+            throw new Exception("ERROR: you aren't privileged to remove an order");
+        Order orderToDelete = findOrderByID(orderID);
+        if (orderToDelete.isPaid())
+            throw new Exception("ERROR: you cannot remove a paid order");
+        //update the amount of copies in the supplier and book and remove the order
+        for (SupplierAndBook s: supplierAndBooks)
+        {
+            if (s.getSupplierID()==orderToDelete.getSupplierID() && s.getBookID()==orderToDelete.getBookID())
+            {
+                s.setNumOfCopies(s.getNumOfCopies()+orderToDelete.getNumOfCopies());
+                updateSupplierAndBook(s);
+                break;
+            }
+        }
+        orders.remove(orderToDelete);
+        try{
+            new AsyncTask< Void,Void,Void>() {
+                @SafeVarargs
+                @Override
+                protected final Void doInBackground(Void... params) {
+                    Map<String,Object> _params = new LinkedHashMap<>();
+                    _params.put("order_id",orderID);
+                    try {
+                        POST(web_url + "removeOrder.php", _params);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            }.execute();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
-
+    /**
+     * function to update an order
+     * @param order to update
+     * @param privilege of the user
+     * @throws Exception
+     */
     @Override
-    public void updateOrder(Order order, Privilege privilege) throws Exception {
+    public void updateOrder(final Order order, Privilege privilege) throws Exception {
+        if (privilege != Privilege.MANAGER) //check that only the manager can update an order
+            throw new Exception("ERROR: you aren't privileged to update an order");
+        Order oldOrder = findOrderByID(order.getOrderID());
+        if (oldOrder.getNumOfCopies() != order.getNumOfCopies())
+        {
+            //need to update the amount of copies in the supplier and book
+            for (SupplierAndBook s : supplierAndBooks){
+                if (s.getSupplierID()==oldOrder.getSupplierID() && s.getBookID()==oldOrder.getBookID())
+                {
+                    s.setNumOfCopies(s.getNumOfCopies()+oldOrder.getNumOfCopies()-order.getNumOfCopies());
+                    updateSupplierAndBook(s);
+                    break;
+                }
+            }
+        }
+        //remove the old order and add the updated order
+        orders.remove(oldOrder);
+        orders.add(order);
 
+        try{
+            new AsyncTask< Void,Void,Void>() {
+                @SafeVarargs
+                @Override
+                protected final Void doInBackground(Void... params) {
+                    Map<String,Object> _params = new LinkedHashMap<>();
+                    _params.put("order_id",order.getOrderID());
+                    _params.put("supplier_id", order.getSupplierID());
+                    _params.put("book_id", order.getBookID());
+                    _params.put("customer_num_id",order.getCustomerNumID());
+                    _params.put("num_of_copies", order.getNumOfCopies());
+                    _params.put("total_price",order.getTotalPrice());
+                    _params.put("paid", order.isPaid());
+                    try {
+                        POST(web_url + "updateOrder.php", _params);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            }.execute();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
     /**
      * function to get the orders' list
@@ -551,7 +980,9 @@ public class DatabaseMySQL implements Backend{
             listToReturn.add(new Order(orderItem));
         return listToReturn;
     }
-
+    /**
+     * set orders list
+     */
     @Override
     public void setOrderList() {
         orders.clear();
@@ -561,6 +992,7 @@ public class DatabaseMySQL implements Backend{
                 protected  ArrayList<Order> doInBackground(Void... voids) {
                     try {
                         Order tempOrder;
+                        int max = 0;
                         JSONArray ordersArray = new JSONObject(GET(web_url + "allOrders.php")).getJSONArray("orders");
                         for (int i = 0; i < ordersArray.length(); i++) {
                             tempOrder = new Order();
@@ -572,7 +1004,12 @@ public class DatabaseMySQL implements Backend{
                             tempOrder.setTotalPrice(ordersArray.getJSONObject(i).getDouble("total_price"));
                             tempOrder.setPaid((ordersArray.getJSONObject(i).getInt("paid") != 0));
                             orders.add(tempOrder);
+                            if (max < tempOrder.getOrderID())
+                            {
+                                max = (int)tempOrder.getOrderID();
+                            }
                         }
+                        Order.setOrderIDCounter(max + 1);//set the max id for adding the next orders
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -593,7 +1030,6 @@ public class DatabaseMySQL implements Backend{
             e.printStackTrace();
         }
     }
-
     /**
      * function to find a orderID by its id
      * @param orderID of the Customer
@@ -609,6 +1045,13 @@ public class DatabaseMySQL implements Backend{
         throw new Exception("ERROR: order doesn't exists in the system");
     }
 
+    //customer CRUD functions
+    /**
+     * function to add a customer
+     * @param customer to add
+     * @param privilege of the user
+     * @throws Exception
+     */
     @Override
     public void addCustomer(final Customer customer, Privilege privilege) throws Exception {
         if (privilege != Privilege.MANAGER) //check that only the manager can update a customer
@@ -626,16 +1069,21 @@ public class DatabaseMySQL implements Backend{
                     _params.put("customer_id",customer.getNumID());
                     _params.put("name", customer.getName());
                     _params.put("address", customer.getAddress());
-                    _params.put("gender",customer.getGender());
+                    _params.put("gender",customer.getGender().ordinal());
                     _params.put("phone_number", customer.getPhoneNumber());
-                    _params.put("email_address",customer.getEmailAddress());
-                    _params.put("privilege", customer.getPrivilege());
-                    _params.put("birthday",customer.getBirthDay());
+                    _params.put("email_address", customer.getEmailAddress());
+                    _params.put("privilege", customer.getPrivilege().ordinal());
+                    Calendar cal;
+                    DateFormat format=new SimpleDateFormat("yyyy-mm-dd");
+                    format.format(customer.getBirthDay());
+                    cal=format.getCalendar();
+                    java.sql.Date sqlDate = new java.sql.Date(cal.getTimeInMillis());
+                    _params.put("birthday",sqlDate);
                     _params.put("num_of_credit_card", customer.getNumOfCreditCard());
-                    _params.put("status",customer.getStatus());
+                    _params.put("status",customer.getStatus().ordinal());
                     _params.put("vip", customer.isVIP());
                     try {
-                        POST(web_url + "addSupplier.php", _params);
+                        POST(web_url + "addCustomer.php", _params);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -648,15 +1096,88 @@ public class DatabaseMySQL implements Backend{
             e.printStackTrace();
         }
     }
-
+    /**
+     * function to remove a customer
+     * @param customerID of the customer
+     * @param privilege of the user
+     * @throws Exception
+     */
     @Override
-    public void removeCustomer(long customerID, Privilege privilege) throws Exception {
-
+    public void removeCustomer(final long customerID, Privilege privilege) throws Exception {
+        if (privilege != Privilege.MANAGER) //check that only the manager can remove a Customer
+            throw new Exception("ERROR: you aren't privileged to remove a customer");
+        Customer customerToDelete = findCustomerByID(customerID); //try to get the Customer
+        customers.remove(customerToDelete); // remove the Customer
+        try{
+            new AsyncTask< Void,Void,Void>() {
+                @SafeVarargs
+                @Override
+                protected final Void doInBackground(Void... params) {
+                    Map<String,Object> _params = new LinkedHashMap<>();
+                    _params.put("customer_id",customerID);
+                    try {
+                        POST(web_url + "removeCustomer.php", _params);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            }.execute();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
-
+    /**
+     * function to update the customer
+     * @param customer that has been updated
+     * @param privilege of the user
+     * @throws Exception
+     */
     @Override
-    public void updateCustomer(Customer customer, Privilege privilege) throws Exception {
-
+    public void updateCustomer(final Customer customer, Privilege privilege) throws Exception {
+        if (privilege != Privilege.MANAGER) //check that only the manager can update a customer
+            throw new Exception("ERROR: you aren't privileged to update a customer");
+        Customer oldCustomer = findCustomerByID(customer.getNumID()); //get the old customer by its ID
+        //remove the old customer and add the updated customer
+        customers.remove(oldCustomer);
+        customers.add(customer);
+        try{
+            new AsyncTask< Void,Void,Void>() {
+                @SafeVarargs
+                @Override
+                protected final Void doInBackground(Void... params) {
+                    Map<String,Object> _params = new LinkedHashMap<>();
+                    _params.put("customer_id",customer.getNumID());
+                    _params.put("name", customer.getName());
+                    _params.put("address", customer.getAddress());
+                    _params.put("gender",customer.getGender().ordinal());
+                    _params.put("phone_number", customer.getPhoneNumber());
+                    _params.put("email_address", customer.getEmailAddress());
+                    _params.put("privilege", customer.getPrivilege().ordinal());
+                    Calendar cal;
+                    DateFormat format=new SimpleDateFormat("yyyy-mm-dd");
+                    format.format(customer.getBirthDay());
+                    cal=format.getCalendar();
+                    java.sql.Date sqlDate = new java.sql.Date(cal.getTimeInMillis());
+                    _params.put("birthday",sqlDate);
+                    _params.put("num_of_credit_card", customer.getNumOfCreditCard());
+                    _params.put("status",customer.getStatus().ordinal());
+                    _params.put("vip", customer.isVIP());
+                    try {
+                        POST(web_url + "updateCustomer.php", _params);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            }.execute();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
     /**
      * function to get the customers' list
@@ -675,7 +1196,9 @@ public class DatabaseMySQL implements Backend{
             listToReturn.add(new Customer(customerItem));
         return listToReturn;
     }
-
+    /**
+     * set customer list
+     */
     @Override
     public void setCustomerList() {
         customers.clear();
@@ -725,7 +1248,6 @@ public class DatabaseMySQL implements Backend{
             e.printStackTrace();
         }
     }
-
     /**
      * function to find a Customer by its id
      * @param customerID of the Customer
@@ -741,6 +1263,13 @@ public class DatabaseMySQL implements Backend{
         throw new Exception("ERROR: customer doesn't exists in the system");
     }
 
+    //opinion CRUD functions
+    /**
+     * function to add an opinion
+     * @param opinion to add
+     * @param privilege of the user
+     * @throws Exception
+     */
     @Override
     public void addOpinion(final Opinion opinion, Privilege privilege) throws Exception {
         if (privilege != Privilege.CUSTOMER) //check that only the customer can add an opinion
@@ -773,7 +1302,12 @@ public class DatabaseMySQL implements Backend{
             e.printStackTrace();
         }
     }
-
+    /**
+     * function to remove an opinion
+     * @param opinionID of the opinion to delete
+     * @param privilege of the user
+     * @throws Exception
+     */
     @Override
     public void removeOpinion(final long opinionID, Privilege privilege) throws Exception {
         if (privilege != Privilege.MANAGER) //check that only the manager can remove an opinion
@@ -805,10 +1339,46 @@ public class DatabaseMySQL implements Backend{
             e.printStackTrace();
         }
     }
-
+    /**
+     * function to update the opinion
+     * @param opinion that has been updated
+     * @param privilege of the user
+     * @throws Exception
+     */
     @Override
-    public void updateOpinion(Opinion opinion, Privilege privilege) throws Exception {
-
+    public void updateOpinion(final Opinion opinion, Privilege privilege) throws Exception {
+        if (privilege != Privilege.CUSTOMER) //check that only the customer can update an opinion
+            throw new Exception("ERROR: you aren't privileged to update an opinion");
+        Opinion oldOpinion = findOpinionByID(opinion.getOpinionID());//try to get the opinion
+        Book book = findBookByID(opinion.getBookID());//try to get the book to update the rate (the id of the book can not be changed
+        //remove the old opinion and add the updated opinion
+        opinions.remove(oldOpinion);
+        opinions.add(opinion);
+        //update the average rate of the book
+        updateBookRate(book);
+        try{
+            new AsyncTask< Void,Void,Void>() {
+                @SafeVarargs
+                @Override
+                protected final Void doInBackground(Void... params) {
+                    Map<String,Object> _params = new LinkedHashMap<>();
+                    _params.put("opinion_id",opinion.getOpinionID());
+                    _params.put("book_id", opinion.getBookID());
+                    _params.put("rate", opinion.getRate());
+                    _params.put("your_opinion",opinion.getYourOpinion());
+                    try {
+                        POST(web_url + "updateOpinion.php", _params);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            }.execute();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
     /**
      * function to get a list of book's opinions
@@ -827,7 +1397,9 @@ public class DatabaseMySQL implements Backend{
                 listToReturn.add(new Opinion(opinionItem));
         return listToReturn;
     }
-
+    /**
+     * set opinion list
+     */
     @Override
     public void setOpinionList() {
         opinions.clear();
@@ -837,6 +1409,7 @@ public class DatabaseMySQL implements Backend{
                 protected  ArrayList<Opinion> doInBackground(Void... voids) {
                     try {
                         Opinion tempOpinion;
+                        int max = 0;
                         JSONArray opinionsArray = new JSONObject(GET(web_url + "allOpinion.php")).getJSONArray("opinions");
                         for (int i = 0; i < opinionsArray.length(); i++) {
                             tempOpinion = new Opinion();
@@ -845,7 +1418,12 @@ public class DatabaseMySQL implements Backend{
                             tempOpinion.setRate(opinionsArray.getJSONObject(i).getInt("rate"));
                             tempOpinion.setYourOpinion(opinionsArray.getJSONObject(i).getString("your_opinion"));
                             opinions.add(tempOpinion);
+                            if (max < tempOpinion.getOpinionID())
+                            {
+                                max = tempOpinion.getOpinionID();
+                            }
                         }
+                        Opinion.setOpinionIDCounter(max +1); //set the max id for adding the next opinions
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -867,7 +1445,6 @@ public class DatabaseMySQL implements Backend{
         }
 
     }
-
     /**
      * function to find an opinion by its id
      * @param opinionID of the opinion
@@ -907,10 +1484,10 @@ public class DatabaseMySQL implements Backend{
                     _params.put("manager_id",manager.getNumID());
                     _params.put("name", manager.getName());
                     _params.put("address", manager.getAddress());
-                    _params.put("gender",manager.getGender());
+                    _params.put("gender",manager.getGender().ordinal());
                     _params.put("phone_number", manager.getPhoneNumber());
                     _params.put("email_address",manager.getEmailAddress());
-                    _params.put("privilege", manager.getPrivilege());
+                    _params.put("privilege", manager.getPrivilege().ordinal());
                     _params.put("years_in_company", manager.getYearsInCompany());
                     try {
                         POST(web_url + "addManager.php", _params);
@@ -926,15 +1503,82 @@ public class DatabaseMySQL implements Backend{
             e.printStackTrace();
         }
     }
-
+    /**
+     * function to remove the manger of the store
+     * @param mangerID of the manger
+     * @param privilege of the user
+     * @throws Exception
+     */
     @Override
-    public void removeManger(long mangerID, Privilege privilege) throws Exception {
-
+    public void removeManger(final long mangerID, Privilege privilege) throws Exception {
+        if (privilege != Privilege.MANAGER) //check the privilege
+            throw new Exception("ERROR: you aren't privileged to remove a manger");
+        if (mangerID != managerOfTheStore.getNumID()) // check the entered ID
+            throw new Exception("ERROR: this manger's ID is not correct");
+        //set the data for the manger if the store to be null
+        managerOfTheStore = new Manager();
+        try{
+            new AsyncTask< Void,Void,Void>() {
+                @SafeVarargs
+                @Override
+                protected final Void doInBackground(Void... params) {
+                    Map<String,Object> _params = new LinkedHashMap<>();
+                    _params.put("manager_id",mangerID);
+                    try {
+                        POST(web_url + "removeManager.php", _params);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            }.execute();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
-
+    /**
+     * function to update the manger of the store
+     * @param manager to update
+     * @param privilege of the user
+     * @throws Exception
+     */
     @Override
-    public void updateManger(Manager manager, Privilege privilege) throws Exception {
-
+    public void updateManger(final Manager manager, Privilege privilege) throws Exception {
+        if (privilege != Privilege.MANAGER) //check the privilege
+            throw new Exception("ERROR: you aren't privileged to update a manger");
+        if (manager.getNumID() != managerOfTheStore.getNumID()) // check the entered ID
+            throw new Exception("ERROR: this manger's ID is not correct");
+        //set the data of the manger
+        managerOfTheStore = new Manager(manager);
+        try{
+            new AsyncTask< Void,Void,Void>() {
+                @SafeVarargs
+                @Override
+                protected final Void doInBackground(Void... params) {
+                    Map<String,Object> _params = new LinkedHashMap<>();
+                    _params.put("manager_id",manager.getNumID());
+                    _params.put("name", manager.getName());
+                    _params.put("address", manager.getAddress());
+                    _params.put("gender",manager.getGender().ordinal());
+                    _params.put("phone_number", manager.getPhoneNumber());
+                    _params.put("email_address",manager.getEmailAddress());
+                    _params.put("privilege", manager.getPrivilege().ordinal());
+                    _params.put("years_in_company", manager.getYearsInCompany());
+                    try {
+                        POST(web_url + "updateManager.php", _params);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            }.execute();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
     /**
      * function to get the manger
@@ -947,7 +1591,9 @@ public class DatabaseMySQL implements Backend{
             throw new Exception("ERROR: the manger of the store wasn't inserted yet");
         return (new Manager(managerOfTheStore)); // to prevent aliasing
     }
-
+    /**
+     * set the manager
+     */
     @Override
     public void setManager() {
         managerOfTheStore = new Manager();
@@ -985,45 +1631,6 @@ public class DatabaseMySQL implements Backend{
 
                 @Override
                 protected void onPostExecute(ArrayList<Manager> suppliers) {
-
-                }
-            }.execute().get();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void setSupplierAndBookList() {
-        supplierAndBooks.clear();
-        try {
-            new AsyncTask<Void, Void,  ArrayList<SupplierAndBook>>() {
-                @Override
-                protected  ArrayList<SupplierAndBook> doInBackground(Void... voids) {
-                    try {
-                        SupplierAndBook tempSupplierAndBook;
-                        JSONArray suppliersAndBookArray = new JSONObject(GET(web_url + "allSupplierAndBook.php")).getJSONArray("supplierAndBooks");
-                        for (int i = 0; i < suppliersAndBookArray.length(); i++) {
-                            tempSupplierAndBook = new SupplierAndBook();
-                            tempSupplierAndBook.setBookID(suppliersAndBookArray.getJSONObject(i).getInt("book_id"));
-                            tempSupplierAndBook.setNumOfCopies(suppliersAndBookArray.getJSONObject(i).getInt("num_of_copies"));
-                            tempSupplierAndBook.setSupplierID((long) suppliersAndBookArray.getJSONObject(i).getInt("supplier_id"));
-                            tempSupplierAndBook.setPrice((float)suppliersAndBookArray.getJSONObject(i).getInt("price"));
-                            supplierAndBooks.add(tempSupplierAndBook);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    return supplierAndBooks;
-                }
-                @Override
-                protected void onPreExecute() {
-                }
-
-                @Override
-                protected void onPostExecute(ArrayList<SupplierAndBook> suppliers) {
 
                 }
             }.execute().get();

@@ -96,6 +96,10 @@ public class Order implements Serializable {
         this.paid = paid;
     }
 
+    public static void setOrderIDCounter(int orderIDCounter) {
+        Order.orderIDCounter = orderIDCounter;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == this)
