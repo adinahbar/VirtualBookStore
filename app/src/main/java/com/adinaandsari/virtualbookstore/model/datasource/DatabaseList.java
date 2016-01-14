@@ -94,8 +94,14 @@ public class DatabaseList implements Backend {
                     if (supplierAndBook.getBookID() == bookID) //there is more suppliers that provide this book
                         flag = true;
                 }
-                if (!flag)
+                if (!flag) {
+                    for (Opinion o: opinions) //remove the opinions of the book
+                    {
+                        if (o.getBookID() == bookToDelete.getBookID())
+                            removeOpinion(o.getOpinionID(),Privilege.MANAGER);
+                    }
                     books.remove(bookToDelete);
+                }
                 break;
             case MANAGER:
                 Book bookForDelete=findBookByID(bookID);//get the book
@@ -105,6 +111,11 @@ public class DatabaseList implements Backend {
                     {
                         supplierAndBooks.remove(supplierAndBookItem);
                     }
+                }
+                for (Opinion o: opinions) //remove the opinions of the book
+                {
+                    if (o.getBookID() == bookForDelete.getBookID())
+                        removeOpinion(o.getOpinionID(),Privilege.MANAGER);
                 }
                 books.remove(bookForDelete);
                 break;

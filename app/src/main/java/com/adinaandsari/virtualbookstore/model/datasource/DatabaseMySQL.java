@@ -210,18 +210,19 @@ public class DatabaseMySQL implements Backend{
                             _params.put("price",supplierAndBook.getPrice());
                             try {
                                 POST(web_url + "updateSupplierAndBook.php", _params);
+                                Log.d("TEST", "reach the update of supplierAndBook ");
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
                             return null;
                         }
                     }.execute();
+                    return true;
                 }
                 catch (Exception e)
                 {
                     e.printStackTrace();
                 }
-                return true;
             }
         }
         return false; //problem with the updating
@@ -377,6 +378,11 @@ public class DatabaseMySQL implements Backend{
                         flag = true;
                 }
                 if (!flag) {
+                    for (Opinion o: opinions) //remove the opinions of the book
+                    {
+                        if (o.getBookID() == bookToDelete.getBookID())
+                            removeOpinion(o.getOpinionID(),Privilege.MANAGER);
+                    }
                     books.remove(bookToDelete);
                     deleteBook(bookToDelete.getBookID());
                 }
@@ -390,6 +396,11 @@ public class DatabaseMySQL implements Backend{
                         supplierAndBooks.remove(supplierAndBookItem);
                         removeSupplierAndBook(supplierAndBookItem.getSupplierID(),supplierAndBookItem.getBookID());
                     }
+                }
+                for (Opinion o: opinions) //remove the opinions of the book
+                {
+                    if (o.getBookID() == bookForDelete.getBookID())
+                        removeOpinion(o.getOpinionID(),Privilege.MANAGER);
                 }
                 books.remove(bookForDelete);
                 deleteBook(bookForDelete.getBookID());
@@ -470,13 +481,14 @@ public class DatabaseMySQL implements Backend{
                     format.format(book.getDatePublished());
                     cal=format.getCalendar();
                     java.sql.Date sqlDate = new java.sql.Date(cal.getTimeInMillis());
-                    _params.put("date_published",sqlDate );
+                    _params.put("date_published", sqlDate);
                     _params.put("books_category",book.getBooksCategory().ordinal());
                     _params.put("summary", book.getSummary());
                     _params.put("language", book.getLanguage().ordinal());
                     _params.put("rate_avr", book.getRateAVR());
                     try {
                         POST(web_url + "updateBook.php", _params);
+                        Log.d("TEST", "reach the update of book " );
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -539,7 +551,6 @@ public class DatabaseMySQL implements Backend{
                         }
                         Book.setBookIDCounter(max+1);//set the max id for adding the next books
                     } catch (Exception e) {
-                        Log.d("TEST", "Exception " + e.toString());
                         e.printStackTrace();
                     }
                     return books;
@@ -604,7 +615,7 @@ public class DatabaseMySQL implements Backend{
                     _params.put("email_address",supplier.getEmailAddress());
                     _params.put("privilege", supplier.getPrivilege().ordinal());
                     _params.put("customer_service_phone_number", supplier.getCustomerServicePhoneNumber());
-                    _params.put("reservation_phone_number", supplier.getReservationsPhoneNumber());
+                    _params.put("reservations_phone_number", supplier.getReservationsPhoneNumber());
                     _params.put("type", supplier.getType().ordinal());
                     try {
                         POST(web_url + "addSupplier.php", _params);
@@ -708,7 +719,7 @@ public class DatabaseMySQL implements Backend{
                     _params.put("email_address",supplier.getEmailAddress());
                     _params.put("privilege", supplier.getPrivilege().ordinal());
                     _params.put("customer_service_phone_number", supplier.getCustomerServicePhoneNumber());
-                    _params.put("reservation_phone_number", supplier.getReservationsPhoneNumber());
+                    _params.put("reservations_phone_number", supplier.getReservationsPhoneNumber());
                     _params.put("type", supplier.getType().ordinal());
                     try {
                         POST(web_url + "updateSupplier.php", _params);
@@ -851,7 +862,10 @@ public class DatabaseMySQL implements Backend{
                     _params.put("customer_num_id",order.getCustomerNumID());
                     _params.put("num_of_copies", order.getNumOfCopies());
                     _params.put("total_price",order.getTotalPrice());
-                    _params.put("paid", order.isPaid());
+                    if (order.isPaid())
+                        _params.put("paid", 1);
+                    else
+                        _params.put("paid", 0);
                     try {
                         POST(web_url + "addOrder.php", _params);
                     } catch (IOException e) {
@@ -950,7 +964,10 @@ public class DatabaseMySQL implements Backend{
                     _params.put("customer_num_id",order.getCustomerNumID());
                     _params.put("num_of_copies", order.getNumOfCopies());
                     _params.put("total_price",order.getTotalPrice());
-                    _params.put("paid", order.isPaid());
+                    if (order.isPaid())
+                        _params.put("paid", 1);
+                    else
+                        _params.put("paid", 0);
                     try {
                         POST(web_url + "updateOrder.php", _params);
                     } catch (IOException e) {
@@ -1081,7 +1098,10 @@ public class DatabaseMySQL implements Backend{
                     _params.put("birthday",sqlDate);
                     _params.put("num_of_credit_card", customer.getNumOfCreditCard());
                     _params.put("status",customer.getStatus().ordinal());
-                    _params.put("vip", customer.isVIP());
+                    if (customer.isVIP())
+                        _params.put("vip", 1);
+                    else
+                        _params.put("vip", 0);
                     try {
                         POST(web_url + "addCustomer.php", _params);
                     } catch (IOException e) {
@@ -1152,7 +1172,7 @@ public class DatabaseMySQL implements Backend{
                     _params.put("customer_id",customer.getNumID());
                     _params.put("name", customer.getName());
                     _params.put("address", customer.getAddress());
-                    _params.put("gender",customer.getGender().ordinal());
+                    _params.put("gender", customer.getGender().ordinal());
                     _params.put("phone_number", customer.getPhoneNumber());
                     _params.put("email_address", customer.getEmailAddress());
                     _params.put("privilege", customer.getPrivilege().ordinal());
@@ -1164,7 +1184,10 @@ public class DatabaseMySQL implements Backend{
                     _params.put("birthday",sqlDate);
                     _params.put("num_of_credit_card", customer.getNumOfCreditCard());
                     _params.put("status",customer.getStatus().ordinal());
-                    _params.put("vip", customer.isVIP());
+                    if (customer.isVIP())
+                        _params.put("vip", 1);
+                    else
+                        _params.put("vip", 0);
                     try {
                         POST(web_url + "updateCustomer.php", _params);
                     } catch (IOException e) {
@@ -1276,8 +1299,6 @@ public class DatabaseMySQL implements Backend{
             throw new Exception("ERROR: you aren't privileged to add an opinion");
         Book book = findBookByID(opinion.getBookID());//try to get the book
         opinions.add(opinion);//add the opinion to the opinion list
-        //update the average rate of the book
-        updateBookRate(book);
         try{
             new AsyncTask< Void,Void,Void>() {
                 @SafeVarargs
@@ -1301,6 +1322,8 @@ public class DatabaseMySQL implements Backend{
         {
             e.printStackTrace();
         }
+        //update the average rate of the book
+        updateBookRate(book);
     }
     /**
      * function to remove an opinion
@@ -1316,8 +1339,6 @@ public class DatabaseMySQL implements Backend{
         Opinion opinionToDelete = findOpinionByID(opinionID);
         Book book = findBookByID(opinionToDelete.getBookID());//try to get the book to update the rate
         opinions.remove(opinionToDelete);
-        //update the average rate of the book
-        updateBookRate(book);
         try{
             new AsyncTask< Void,Void,Void>() {
                 @SafeVarargs
@@ -1338,6 +1359,8 @@ public class DatabaseMySQL implements Backend{
         {
             e.printStackTrace();
         }
+        //update the average rate of the book
+        updateBookRate(book);
     }
     /**
      * function to update the opinion
@@ -1354,8 +1377,6 @@ public class DatabaseMySQL implements Backend{
         //remove the old opinion and add the updated opinion
         opinions.remove(oldOpinion);
         opinions.add(opinion);
-        //update the average rate of the book
-        updateBookRate(book);
         try{
             new AsyncTask< Void,Void,Void>() {
                 @SafeVarargs
@@ -1379,6 +1400,8 @@ public class DatabaseMySQL implements Backend{
         {
             e.printStackTrace();
         }
+        //update the average rate of the book
+        updateBookRate(book);
     }
     /**
      * function to get a list of book's opinions
