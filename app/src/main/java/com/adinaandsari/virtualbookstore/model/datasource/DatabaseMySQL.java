@@ -354,9 +354,9 @@ public class DatabaseMySQL implements Backend{
                 boolean flag = false;
                 for (Order o :orders)
                 {
-                    if (o.getOrderID()== userID && o.getBookID()==bookID && o.isPaid()==false)
+                    if (o.getOrderID()== userID && o.getBookID()==bookID)
                     {
-                        throw new Exception("ERROR: you can not remove this book because it is in orders of customer");
+                        throw new Exception("ERROR: you can not remove this book because it is in orders of customers");
                     }
                 }
                 for (SupplierAndBook supplierAndBookItem : supplierAndBooks) //delete the supplier and book with this book

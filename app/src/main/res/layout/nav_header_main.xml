@@ -9,18 +9,22 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark" android:orientation="vertical"
     android:gravity="bottom">
 
-    <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+    <ImageView android:layout_width="70dp" android:layout_height="70dp"
         android:paddingTop="16dp"
-        android:src="@android:drawable/sym_def_app_icon" android:id="@+id/imageView" />
+        android:src="@drawable/book_press_icon" android:id="@+id/imageView"
+        android:layout_gravity="center_horizontal"/>
 
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:paddingTop="16dp" android:text="Navigation Drawer"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:paddingTop="16dp" android:text="Wellcome"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/sing"
-        android:id="@+id/textView" />
+        android:id="@+id/textView"
+        android:layout_gravity="center_horizontal"/>
 
 </LinearLayout>
