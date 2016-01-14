@@ -3,33 +3,50 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#9bcff2"
-    android:weightSum="4">
-    <TextView
-        android:id="@+id/personIdTextView_row"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/id_text_view"
-        android:layout_weight="1"
-        android:layout_gravity="center" />
-    <TextView
-        android:id="@+id/personNameTextView_row"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/name_text_view"
-        android:layout_weight="1"
-        android:layout_gravity="center" />
-    <TextView
-        android:id="@+id/personPhoneNumTextView_row"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/phon_number_text_view"
-        android:layout_weight="1"
-        android:layout_gravity="center" />
-    <TextView
-        android:id="@+id/personEmailTextView_row"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/email_text_view"
-        android:layout_weight="1"
-        android:layout_gravity="center" />
+    android:orientation="vertical"
+    >
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/imageView_list_person"
+        android:background="#ffffff"
+        android:src="@drawable/person_img"
+        android:layout_gravity="center"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="4">
+        <TextView
+            android:id="@+id/personIdTextView_row"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/id_text_view"
+            android:layout_weight="1"
+            android:layout_gravity="center" />
+        <TextView
+            android:id="@+id/personNameTextView_row"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/name_text_view"
+            android:layout_weight="1"
+            android:layout_gravity="center" />
+        <TextView
+            android:id="@+id/personPhoneNumTextView_row"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/phon_number_text_view"
+            android:layout_weight="1"
+            android:layout_gravity="center" />
+        <TextView
+            android:id="@+id/personEmailTextView_row"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/email_text_view"
+            android:layout_weight="1"
+            android:layout_gravity="center" />
+    </LinearLayout>
+
 </LinearLayout>
